@@ -14,6 +14,6 @@ class DiscountCodeGroupsSeeder extends Seeder
      */
     public function run(): void
     {
-        DiscountCodeGroups::factory(5);
+        DiscountCodeGroups::factory()->create();
     }
 }
