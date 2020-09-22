@@ -2,11 +2,11 @@
 
 namespace Database\Seeders;
 
-use App\Models\DiscountCode;
+use App\Models\DiscountCodeFeatures;
 use App\Models\DiscountCodeGroups;
 use Illuminate\Database\Seeder;
 
-class DiscountCodeSeeder extends Seeder
+class DiscountCodeFeaturesSeeder extends Seeder
 {
     /**
      * Run the database seeds.
@@ -15,6 +15,6 @@ class DiscountCodeSeeder extends Seeder
      */
     public function run(): void
     {
-        DiscountCode::factory()->create(['group_id' => DiscountCodeGroups::factory()->create()]);
+        DiscountCodeFeatures::factory()->create(['group_id' => DiscountCodeGroups::factory()->create()]);
     }
 }

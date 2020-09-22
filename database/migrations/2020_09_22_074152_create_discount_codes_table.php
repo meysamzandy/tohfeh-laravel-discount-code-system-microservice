@@ -25,7 +25,7 @@ class CreateDiscountCodesTable extends Migration
             $table->unsignedInteger('usage_limit_per_user')->default(1)->comment('count of authorized uses for this code per user.');
             $table->boolean('first_buy')->default(false)->comment("Is this code for the user's first purchase?");
             $table->boolean('has_market')->default(false)->comment('Does this code have restrictions on use in a particular market?');
-            $table->dateTime('cancel_date')->nullable()->comment('Date that this code can no longer be used.');
+            $table->timestamp('cancel_date')->nullable()->comment('Date that this code can no longer be used.');
             $table->timestamps();
         });
     }
