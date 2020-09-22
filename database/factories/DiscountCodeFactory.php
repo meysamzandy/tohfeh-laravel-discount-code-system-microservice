@@ -4,6 +4,7 @@ namespace Database\Factories;
 
 use App\Models\DiscountCode;
 use App\Models\DiscountCodeGroups;
+use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Factories\Factory;
 use Illuminate\Support\Str;
 
@@ -32,7 +33,7 @@ class DiscountCodeFactory extends Factory
             'usage_limit_per_user' =>$this->faker->numberBetween(0,10) ,
             'first_buy' => $this->faker->boolean,
             'has_market' => $this->faker->boolean ,
-            'cancel_date' => $this->faker->randomElement([null, time() - 1296000 /* 15 days */,  time() - 2678400 /* 31 days */]),
+            'cancel_date' => $this->faker->randomElement([null, Carbon::today()->subDays(15) /* 15 days */,  Carbon::today()->subDays(31) /* 31 days */]),
         ];
     }
 }
