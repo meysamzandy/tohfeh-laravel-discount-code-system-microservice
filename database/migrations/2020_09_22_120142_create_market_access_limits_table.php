@@ -17,7 +17,7 @@ class CreateMarketAccessLimitsTable extends Migration
         Schema::create('market_access_limits', function (Blueprint $table) {
             $table->id();
             $table->foreignId('code_id')->constrained('discount_codes')->onDelete('cascade');
-            $table->string('name', 40)->comment('market name');
+            $table->string('market_name', 40)->comment('market name');
             $table->string('version_major', 3)->comment('market major version');
             $table->string('version_minor', 3)->comment('market minor version');
             $table->string('version_patch', 3)->comment('market patch version');

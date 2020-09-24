@@ -33,7 +33,6 @@ class SmallHelperTest extends TestCase
         self::assertNotNull($code);
         self::assertNotFalse( strpos($code, $prefix));
         self::assertEquals($length, strlen(str_replace($prefix, '', $code)));
-
         $mock = Mockery::mock(SmallHelper::class,'codeGenerator');
         $mock->shouldReceive('codeGenerator')->once()->andReturn(
             null

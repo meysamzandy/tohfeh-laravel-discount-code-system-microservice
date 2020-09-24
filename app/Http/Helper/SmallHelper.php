@@ -37,7 +37,13 @@ class SmallHelper
         return $result;
     }
 
-    public function checkDateInterval($inputDate, $dateBegin,$dateEnd): bool
+    /**
+     * @param $inputDate
+     * @param $dateBegin
+     * @param $dateEnd
+     * @return bool
+     */
+    public function checkDateInterval($inputDate, $dateBegin, $dateEnd): bool
     {
         $paymentDate = date('Y-m-d H:i:s', strtotime($inputDate));
         $contractDateBegin = date('Y-m-d H:i:s', strtotime($dateBegin));
