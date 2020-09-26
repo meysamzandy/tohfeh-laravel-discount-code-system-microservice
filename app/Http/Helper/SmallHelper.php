@@ -26,11 +26,12 @@ class SmallHelper
     {
         $randomString = '';
         $charactersLength = strlen($stringType);
+        $prefixToUpper = strtoupper($prefix);
         try {
             for ($i = 0; $i < $length; $i++) {
                 $randomString .= $stringType[random_int(0, $charactersLength - 1)];
             }
-            $result = $prefix . $randomString;
+            $result = $prefixToUpper . $randomString;
         } catch (\Exception $e) {
             $result = null;
         }

@@ -10,6 +10,6 @@ class DiscountCodeGroups extends Model
     use HasFactory;
 
     protected $fillable = [
-        'name','series'
+        'group_name','series'
     ];
 }

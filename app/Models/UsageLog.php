@@ -8,4 +8,7 @@ use Illuminate\Database\Eloquent\Model;
 class UsageLog extends Model
 {
     use HasFactory;
+    protected $fillable = [
+        'code_id','code','uuid'
+    ];
 }

@@ -9,7 +9,7 @@ use Illuminate\Support\Facades\Validator;
 class ValidatorHelper
 {
 
-    public function creationCodeValidator($data)
+    public function creationCodeValidator($data): \Illuminate\Contracts\Validation\Validator
     {
         return Validator::make($data,
             [

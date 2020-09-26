@@ -17,7 +17,7 @@ class CreateUsageLogsTable extends Migration
         Schema::create('usage_logs', function (Blueprint $table) {
             $table->id();
             $table->foreignId('code_id')->constrained('discount_codes')->onDelete('cascade');
-            $table->string('code',40)->unique()->index()->comment('discount codes are here');
+            $table->string('code',40)->index()->comment('discount codes are here');
             $table->uuid('uuid')->comment('user uuid in user management system');
             $table->timestamps();
         });

@@ -2,6 +2,7 @@
 
 namespace Database\Factories;
 
+use App\Http\Helper\SmallHelper;
 use App\Models\DiscountCode;
 use App\Models\DiscountCodeGroups;
 use Carbon\Carbon;
@@ -24,8 +25,12 @@ class DiscountCodeFactory extends Factory
      */
     public function definition()
     {
+        $prefix = 'test_' ;
+        $stringType = config('settings.generatorString.bothCharacter') ;
+        $length = config('settings.automateCodeLength') ;
+        $code = (new SmallHelper);
         return [
-            'code' => $this->faker->unique()->bothify(),
+            'code' => $code->codeGenerator($prefix, $stringType, $length),
             'created_type' => $this->faker->randomElement(['auto','manual']) ,
             'access_type' => $this->faker->randomElement(['public','private']) ,
             'usage_limit' => $this->faker->numberBetween(0,20),

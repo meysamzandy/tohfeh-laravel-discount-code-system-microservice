@@ -23,7 +23,7 @@ class MarketAccessLimitFactory extends Factory
     public function definition()
     {
         return [
-            'name' => $this->faker->randomElement(['mobileApp', 'tvApp', 'iosApp', 'spa', 'cafebazzar', 'myket']),
+            'market_name' => $this->faker->randomElement(['mobileApp', 'tvApp', 'iosApp', 'spa', 'cafebazzar', 'myket']),
             'version_major' => $this->faker->numberBetween(1, 999),
             'version_minor' => $this->faker->numberBetween(1, 999),
             'version_patch' => $this->faker->numberBetween(1, 999),

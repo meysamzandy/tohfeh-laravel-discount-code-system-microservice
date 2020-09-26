@@ -25,7 +25,7 @@ class SmallHelperTest extends TestCase
     // check code generator
     public function testCodeGenerator(): void
     {
-        $prefix = 'test_' ;
+        $prefix = strtoupper('test_') ;
         $stringType = config('settings.generatorString.bothCharacter') ;
         $length = config('settings.automateCodeLength') ;
         $code = (new SmallHelper)->codeGenerator($prefix, $stringType, $length);

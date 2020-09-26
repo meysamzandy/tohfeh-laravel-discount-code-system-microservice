@@ -23,7 +23,7 @@ class DiscountCodeGroupsFactory extends Factory
     public function definition()
     {
         return [
-            'name' => $this->faker->title,
+            'group_name' => $this->faker->title,
         ];
     }
 }

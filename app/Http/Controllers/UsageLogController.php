@@ -30,7 +30,7 @@ class UsageLogController extends Controller
     /**
      * Store a newly created resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
+     * @param \Illuminate\Http\Request $request
      * @return \Illuminate\Http\Response
      */
     public function store(Request $request)
@@ -41,18 +41,18 @@ class UsageLogController extends Controller
     /**
      * Display the specified resource.
      *
-     * @param  \App\Models\UsageLog  $usageLog
+     * @param \App\Models\UsageLog $usageLog
      * @return \Illuminate\Http\Response
      */
     public function show(UsageLog $usageLog)
     {
-        //
+
     }
 
     /**
      * Show the form for editing the specified resource.
      *
-     * @param  \App\Models\UsageLog  $usageLog
+     * @param \App\Models\UsageLog $usageLog
      * @return \Illuminate\Http\Response
      */
     public function edit(UsageLog $usageLog)
@@ -63,8 +63,8 @@ class UsageLogController extends Controller
     /**
      * Update the specified resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  \App\Models\UsageLog  $usageLog
+     * @param \Illuminate\Http\Request $request
+     * @param \App\Models\UsageLog $usageLog
      * @return \Illuminate\Http\Response
      */
     public function update(Request $request, UsageLog $usageLog)
@@ -75,11 +75,31 @@ class UsageLogController extends Controller
     /**
      * Remove the specified resource from storage.
      *
-     * @param  \App\Models\UsageLog  $usageLog
+     * @param \App\Models\UsageLog $usageLog
      * @return \Illuminate\Http\Response
      */
     public function destroy(UsageLog $usageLog)
     {
         //
+    }
+
+
+    /**
+     * @param string $code
+     * @param null $uuid
+     * @return int
+     */
+    public function UsageOfUser(string $code, $uuid = null): int
+    {
+        try {
+            $usage = UsageLog::query()->where([
+                'uuid' => $uuid,
+                'code' => $code,
+            ])->count();
+        } catch (\Exception $e) {
+            dd('$vars');
+            $usage = 0;
+        }
+        return $usage;
     }
 }

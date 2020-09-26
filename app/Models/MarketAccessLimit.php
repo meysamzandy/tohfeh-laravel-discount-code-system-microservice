@@ -8,4 +8,7 @@ use Illuminate\Database\Eloquent\Model;
 class MarketAccessLimit extends Model
 {
     use HasFactory;
+    protected $fillable = [
+        'code_id','market_name','version_major','version_minor','version_patch'
+    ];
 }

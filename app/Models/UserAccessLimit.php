@@ -8,4 +8,7 @@ use Illuminate\Database\Eloquent\Model;
 class UserAccessLimit extends Model
 {
     use HasFactory;
+    protected $fillable = [
+        'code_id','uuid'
+    ];
 }
