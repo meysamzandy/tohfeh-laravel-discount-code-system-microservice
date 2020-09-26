@@ -3,83 +3,57 @@
 namespace App\Http\Controllers;
 
 use App\Models\MarketAccessLimit;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Http\Request;
 
 class MarketAccessLimitController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function index()
-    {
-        //
-    }
 
     /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
+     * @param int $code_id
+     * @param string $market_name
+     * @param int $version_major
+     * @param int $version_minor
+     * @param int $version_patch
+     * @return object|null
      */
-    public function create()
+    public function insertMarketAccessLimit(int $code_id, string $market_name, int $version_major, int $version_minor, int $version_patch)
     {
-        //
+        try {
+            return MarketAccessLimit::create([
+                'code_id' => $code_id,
+                'market_name' => $market_name,
+                'version_major' => $version_major,
+                'version_minor' => $version_minor,
+                'version_patch' => $version_patch,
+            ]);
+        } catch (\Exception $e) {
+            return null;
+        }
     }
 
-    /**
-     * Store a newly created resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
-     */
-    public function store(Request $request)
-    {
-        //
-    }
 
     /**
-     * Display the specified resource.
-     *
-     * @param  \App\Models\MarketAccessLimit  $marketAccessLimit
-     * @return \Illuminate\Http\Response
+     * @param $code_id
+     * @param $market_name
+     * @param $version_major
+     * @param $version_minor
+     * @param $version_patch
+     * @return bool
      */
-    public function show(MarketAccessLimit $marketAccessLimit)
+    public function selectMarketAccessLimit($code_id, $market_name, $version_major, $version_minor, $version_patch): bool
     {
-        //
-    }
+        try {
+            return MarketAccessLimit::query()->where([
+                'code_id' => $code_id,
+                'market_name' => $market_name,
+                'version_major' => $version_major,
+                'version_minor' => $version_minor,
+                'version_patch' => $version_patch,
+            ])->exists();
+        } catch (\Exception $e) {
+            return false ;
+        }
 
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  \App\Models\MarketAccessLimit  $marketAccessLimit
-     * @return \Illuminate\Http\Response
-     */
-    public function edit(MarketAccessLimit $marketAccessLimit)
-    {
-        //
-    }
-
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  \App\Models\MarketAccessLimit  $marketAccessLimit
-     * @return \Illuminate\Http\Response
-     */
-    public function update(Request $request, MarketAccessLimit $marketAccessLimit)
-    {
-        //
-    }
-
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  \App\Models\MarketAccessLimit  $marketAccessLimit
-     * @return \Illuminate\Http\Response
-     */
-    public function destroy(MarketAccessLimit $marketAccessLimit)
-    {
-        //
     }
 }

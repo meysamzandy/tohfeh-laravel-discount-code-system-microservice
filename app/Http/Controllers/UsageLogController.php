@@ -16,7 +16,7 @@ class UsageLogController extends Controller
      * @param $uuid
      * @return object|null
      */
-    public function insertUsage($code_id, $code, $uuid)
+    public function insertUsageLog($code_id, $code, $uuid)
     {
         try {
             return UsageLog::create([
@@ -35,7 +35,7 @@ class UsageLogController extends Controller
      * @param null $uuid
      * @return int
      */
-    public function UsageOfUser(string $code, $uuid = null): int
+    public function countUsageLog(string $code, $uuid = null): int
     {
         try {
             $usage = UsageLog::query()->where([
