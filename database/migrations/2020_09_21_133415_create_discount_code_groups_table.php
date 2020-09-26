@@ -2,6 +2,7 @@
 
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Schema;
 
 class CreateDiscountCodeGroupsTable extends Migration
@@ -28,6 +29,9 @@ class CreateDiscountCodeGroupsTable extends Migration
      */
     public function down(): void
     {
+
+        DB::statement('SET FOREIGN_KEY_CHECKS = 0');
         Schema::dropIfExists('discount_code_groups');
+        DB::statement('SET FOREIGN_KEY_CHECKS = 1');
     }
 }

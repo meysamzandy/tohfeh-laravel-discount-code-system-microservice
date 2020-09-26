@@ -156,4 +156,10 @@ class ValidatorHelperTest extends TestCase
         self::assertTrue($result->passes());
 
     }
+
+    protected function tearDown(): void
+    {
+        parent::tearDown();
+    }
+
 }

@@ -3,8 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\MarketAccessLimit;
-use Illuminate\Database\Eloquent\Builder;
-use Illuminate\Http\Request;
+use Exception;
 
 class MarketAccessLimitController extends Controller
 {
@@ -27,7 +26,7 @@ class MarketAccessLimitController extends Controller
                 'version_minor' => $version_minor,
                 'version_patch' => $version_patch,
             ]);
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             return null;
         }
     }
@@ -51,7 +50,7 @@ class MarketAccessLimitController extends Controller
                 'version_minor' => $version_minor,
                 'version_patch' => $version_patch,
             ])->exists();
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             return false ;
         }
 

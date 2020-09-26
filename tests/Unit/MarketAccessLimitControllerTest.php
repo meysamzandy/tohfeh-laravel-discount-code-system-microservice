@@ -38,4 +38,9 @@ class MarketAccessLimitControllerTest extends TestCase
         $hasMarketLimit = (new MarketAccessLimitController)->selectMarketAccessLimit(1, 'myket', 1, 0, 1);
         self::assertFalse($hasMarketLimit);
     }
+
+    protected function tearDown(): void
+    {
+        parent::tearDown();
+    }
 }

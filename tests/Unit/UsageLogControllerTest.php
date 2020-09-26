@@ -35,4 +35,9 @@ class UsageLogControllerTest extends TestCase
             'uuid' => $store->uuid
         ]);
     }
+
+    protected function tearDown(): void
+    {
+        parent::tearDown();
+    }
 }
