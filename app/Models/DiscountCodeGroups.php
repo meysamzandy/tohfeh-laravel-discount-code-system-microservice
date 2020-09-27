@@ -4,6 +4,8 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use App\Models\DiscountCodeFeatures;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class DiscountCodeGroups extends Model
 {
@@ -12,4 +14,21 @@ class DiscountCodeGroups extends Model
     protected $fillable = [
         'group_name','series'
     ];
+
+    /**
+     * @return HasMany
+     */
+    public function features(): HasMany
+    {
+        return $this->hasMany(DiscountCodeFeatures::class,'group_id','id');
+    }
+
+    /**
+     * @return HasMany
+     */
+    public function codes(): HasMany
+    {
+        return $this->hasMany(DiscountCode::class,'group_id','id');
+    }
+
 }
