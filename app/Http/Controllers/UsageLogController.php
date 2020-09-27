@@ -3,7 +3,6 @@
 namespace App\Http\Controllers;
 
 use App\Models\UsageLog;
-use Illuminate\Http\Request;
 
 
 class UsageLogController extends Controller
