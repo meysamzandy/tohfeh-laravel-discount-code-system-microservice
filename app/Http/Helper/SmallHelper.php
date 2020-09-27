@@ -4,6 +4,9 @@
 namespace App\Http\Helper;
 
 
+use Exception;
+use Illuminate\Http\Request;
+
 class SmallHelper
 {
 
@@ -32,7 +35,7 @@ class SmallHelper
                 $randomString .= $stringType[random_int(0, $charactersLength - 1)];
             }
             $result = $prefixToUpper . $randomString;
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             $result = null;
         }
         return $result;

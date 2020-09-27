@@ -14,18 +14,16 @@ class DiscountCodeFeaturesController extends Controller
      */
     public function index()
     {
+        /**
+
+         * @get('/api/admin/feature')
+         * @name('generated::ChJokdj7FvvU1tZg')
+         * @middlewares(api, CheckToken)
+         */
         //
     }
 
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function create()
-    {
-        //
-    }
+
 
     /**
      * Store a newly created resource in storage.
@@ -35,30 +33,17 @@ class DiscountCodeFeaturesController extends Controller
      */
     public function store(Request $request)
     {
+        /**
+
+         * @post('/api/admin/feature')
+         * @name('generated::DL28iPHUGZZFVLxe')
+         * @middlewares(api, CheckToken)
+         */
         //
     }
 
-    /**
-     * Display the specified resource.
-     *
-     * @param  \App\Models\DiscountCodeFeatures  $discountCodeFeatures
-     * @return \Illuminate\Http\Response
-     */
-    public function show(DiscountCodeFeatures $discountCodeFeatures)
-    {
-        //
-    }
 
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  \App\Models\DiscountCodeFeatures  $discountCodeFeatures
-     * @return \Illuminate\Http\Response
-     */
-    public function edit(DiscountCodeFeatures $discountCodeFeatures)
-    {
-        //
-    }
+
 
     /**
      * Update the specified resource in storage.
@@ -69,6 +54,12 @@ class DiscountCodeFeaturesController extends Controller
      */
     public function update(Request $request, DiscountCodeFeatures $discountCodeFeatures)
     {
+        /**
+
+         * @patch('/api/admin/feature/{id}')
+         * @name('generated::DYWGCPDTRY6sMIyG')
+         * @middlewares(api, CheckToken)
+         */
         //
     }
 
@@ -80,6 +71,12 @@ class DiscountCodeFeaturesController extends Controller
      */
     public function destroy(DiscountCodeFeatures $discountCodeFeatures)
     {
+        /**
+
+         * @delete('/api/admin/feature/{id}')
+         * @name('generated::DafiL150qa0CqG7W')
+         * @middlewares(api, CheckToken)
+         */
         //
     }
 }

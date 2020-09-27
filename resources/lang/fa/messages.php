@@ -17,6 +17,7 @@ return [
     'boolean' => 'مقدار :input برای ویژگی :attribute بایستی از نوع منطق true یا false باشد. ',
     'date' => 'مقدار :input برای ویژگی :attribute بایستی از نوع تاریخ با فرمت 0000-00-00 00:00:00 باشد. ',
     'after' => 'مقدار :input برای ویژگی :attribute بایستی بزرگتر از مقدار قبلی باشد. ',
+    'after_or_equal' => 'مقدار :input برای ویژگی :attribute بایستی بزرگتر از مقدار زمان فعلی باشد. ',
     'uuid' => 'مقدار :input برای ویژگی :attribute بایستی از نوع uuid باشد. ',
 
 ];

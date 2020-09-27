@@ -4,6 +4,7 @@ namespace Tests\Unit;
 
 use App\Http\Helper\ValidatorHelper;
 use App\Models\DiscountCodeGroups;
+use Carbon\Carbon;
 use Illuminate\Support\Facades\Artisan;
 use Tests\TestCase;
 
@@ -111,8 +112,8 @@ class ValidatorHelperTest extends TestCase
             'version_patch' => '',
 //            // code feature property
             'plan_id' => 1212,
-            'start_time' => date('Y-m-d H:i:s', strtotime('2020-09-22 10:25:38')),
-            'end_time' => date('Y-m-d H:i:s', strtotime('2020-09-25 10:25:38')),
+            'start_time' => date('Y-m-d H:i:s', strtotime(Carbon::today()->addDays(1))),
+            'end_time' => date('Y-m-d H:i:s', strtotime(Carbon::today()->addDays(5))),
             'code_type' => 'price',
             'percent' => 1,
             'limit_percent_price' => '',
@@ -130,6 +131,7 @@ class ValidatorHelperTest extends TestCase
             'series' => '',
             //code property
             'created_type' => 'auto', // if auto code should be empty
+            'creation_code_count' => 10 ,
             'code' => '',
             'access_type' => 'public',
             'uuid_list' => '',
@@ -143,8 +145,8 @@ class ValidatorHelperTest extends TestCase
             'version_patch' => 0,
 //            // code feature property
             'plan_id' => 1212,
-            'start_time' => date('Y-m-d H:i:s', strtotime('2020-09-22 10:25:38')),
-            'end_time' => date('Y-m-d H:i:s', strtotime('2020-09-25 10:25:38')),
+            'start_time' => date('Y-m-d H:i:s', strtotime(Carbon::today()->addDays(1))),
+            'end_time' => date('Y-m-d H:i:s', strtotime(Carbon::today()->addDays(5))),
             'code_type' => 'price',
             'percent' => 1,
             'limit_percent_price' => '',
