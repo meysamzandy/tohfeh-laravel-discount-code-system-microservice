@@ -61,24 +61,26 @@ class SmallHelper
      */
     public function checkIfFeatureCouldInsert(array $features): bool
     {
-        $count = count($features) - 1 ;
+        $count = count($features) - 1;
         $checkinArray = $features;
-        for ($i = 0; $i < $count ; $i++) {
+        for ($i = 0; $i < $count; $i++) {
             foreach ($checkinArray as $key => $value) {
-                if ($i !== $key) {
-
-                    $IntervalStart_timeStatus = $this->checkDateInterval($features[$i]['start_time'], $value['start_time'], $value['end_time']);
-                    $IntervalEnd_timeStatus = $this->checkDateInterval($features[$i]['end_time'], $value['start_time'], $value['end_time']);
-                    if (($features[$i]['plan_id'] === $value['plan_id']) && $IntervalStart_timeStatus) {
-                        return false ;
-                    }
-                    if (($features[$i]['plan_id'] === $value['plan_id']) && $IntervalEnd_timeStatus) {
-                        return false ;
-                    }
+                if ($i === $key) {
+                    continue;
                 }
+
+                $IntervalStart_timeStatus = $this->checkDateInterval($features[$i]['start_time'], $value['start_time'], $value['end_time']);
+                $IntervalEnd_timeStatus = $this->checkDateInterval($features[$i]['end_time'], $value['start_time'], $value['end_time']);
+                if (($features[$i]['plan_id'] === $value['plan_id']) && $IntervalStart_timeStatus) {
+                    return false;
+                }
+                if (($features[$i]['plan_id'] === $value['plan_id']) && $IntervalEnd_timeStatus) {
+                    return false;
+                }
+
             }
         }
-        return true ;
+        return true;
     }
 
 }

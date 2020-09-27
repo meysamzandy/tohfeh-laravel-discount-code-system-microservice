@@ -38,6 +38,7 @@ class DiscountCode extends Model
                 if ($group_id) {
                     $createFeaturesStatus = (new DiscountCodeFeatures)->createFeatures($group_id->id, $data['features']);
                     if ($createFeaturesStatus) {
+
                         $stringType = [
                             0 => config('settings.generatorString.number'),
                             1 => config('settings.generatorString.alphabetic'),
