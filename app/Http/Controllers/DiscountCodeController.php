@@ -7,6 +7,8 @@ use App\Http\Helper\ValidatorHelper;
 use App\Models\DiscountCode;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use Illuminate\Http\Response;
+use Illuminate\Validation\ValidationException;
 
 
 class DiscountCodeController extends Controller
@@ -20,7 +22,7 @@ class DiscountCodeController extends Controller
     /**
      * Display a listing of the resource.
      *
-     * @return \Illuminate\Http\Response
+     * @return Response
      */
     public function index()
     {
@@ -37,6 +39,7 @@ class DiscountCodeController extends Controller
     /**
      * @param Request $request
      * @return JsonResponse
+     * @throws ValidationException
      */
     public function store(Request $request)
     {
@@ -47,7 +50,6 @@ class DiscountCodeController extends Controller
          * @middlewares(api, CheckToken)
          */
 
-
         $validator = (new ValidatorHelper)->creationCodeValidator($request->post());
 
         if ($validator->fails()) {
@@ -56,7 +58,9 @@ class DiscountCodeController extends Controller
 
         }
 
-        return response()->json($request->post(),200);
+        (new DiscountCode)->createCode($validator->validated());
+
+        return response()->json($validator->validated(),200);
     }
 
 
@@ -65,8 +69,8 @@ class DiscountCodeController extends Controller
      * Update the specified resource in storage.
      *
      * @param Request $request
-     * @param  \App\Models\DiscountCode  $discountCode
-     * @return \Illuminate\Http\Response
+     * @param DiscountCode $discountCode
+     * @return Response
      */
     public function update(Request $request, DiscountCode $discountCode)
     {

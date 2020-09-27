@@ -42,17 +42,43 @@ class SmallHelper
     }
 
     /**
-     * @param $inputDate
+     * @param $input
      * @param $dateBegin
      * @param $dateEnd
      * @return bool
      */
-    public function checkDateInterval($inputDate, $dateBegin, $dateEnd): bool
+    public function checkDateInterval($input, $dateBegin, $dateEnd): bool
     {
-        $paymentDate = date('Y-m-d H:i:s', strtotime($inputDate));
+        $inputDate = date('Y-m-d H:i:s', strtotime($input));
         $contractDateBegin = date('Y-m-d H:i:s', strtotime($dateBegin));
         $contractDateEnd = date('Y-m-d H:i:s', strtotime($dateEnd));
-        return ($paymentDate >= $contractDateBegin) && ($paymentDate <= $contractDateEnd);
+        return ($inputDate >= $contractDateBegin) && ($inputDate <= $contractDateEnd);
+    }
+
+    /**
+     * @param array $features
+     * @return bool
+     */
+    public function checkIfFeatureCouldInsert(array $features): bool
+    {
+        $count = count($features) - 1 ;
+        $checkinArray = $features;
+        for ($i = 0; $i < $count ; $i++) {
+            foreach ($checkinArray as $key => $value) {
+                if ($i !== $key) {
+
+                    $IntervalStart_timeStatus = $this->checkDateInterval($features[$i]['start_time'], $value['start_time'], $value['end_time']);
+                    $IntervalEnd_timeStatus = $this->checkDateInterval($features[$i]['end_time'], $value['start_time'], $value['end_time']);
+                    if (($features[$i]['plan_id'] === $value['plan_id']) && $IntervalStart_timeStatus) {
+                        return false ;
+                    }
+                    if (($features[$i]['plan_id'] === $value['plan_id']) && $IntervalEnd_timeStatus) {
+                        return false ;
+                    }
+                }
+            }
+        }
+        return true ;
     }
 
 }
