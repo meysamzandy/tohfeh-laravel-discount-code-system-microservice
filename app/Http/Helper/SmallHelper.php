@@ -14,7 +14,7 @@ class SmallHelper
      * @param $code
      * @return string
      */
-    public function changeCodeToUppercase($code): string
+    public static function changeCodeToUppercase($code): string
     {
         return strtoupper($code);
     }
@@ -25,7 +25,7 @@ class SmallHelper
      * @param $length
      * @return string|null
      */
-    public function codeGenerator($prefix, $stringType, $length): ?string
+    public static function codeGenerator($prefix, $stringType, $length): ?string
     {
         $randomString = '';
         $charactersLength = strlen($stringType);
@@ -55,32 +55,54 @@ class SmallHelper
         return ($inputDate >= $contractDateBegin) && ($inputDate <= $contractDateEnd);
     }
 
+
     /**
-     * @param array $features
-     * @return bool
+     * @param array $data
+     * @return array
      */
-    public function checkIfFeatureCouldInsert(array $features): bool
+    public static function prepareDataForManualCodes(array $data): array
     {
-        $count = count($features) - 1;
-        $checkinArray = $features;
-        for ($i = 0; $i < $count; $i++) {
-            foreach ($checkinArray as $key => $value) {
-                if ($i === $key) {
-                    continue;
-                }
-
-                $IntervalStart_timeStatus = $this->checkDateInterval($features[$i]['start_time'], $value['start_time'], $value['end_time']);
-                $IntervalEnd_timeStatus = $this->checkDateInterval($features[$i]['end_time'], $value['start_time'], $value['end_time']);
-                if (($features[$i]['plan_id'] === $value['plan_id']) && $IntervalStart_timeStatus) {
-                    return false;
-                }
-                if (($features[$i]['plan_id'] === $value['plan_id']) && $IntervalEnd_timeStatus) {
-                    return false;
-                }
-
-            }
-        }
-        return true;
+        $groupData = [
+            'group_name' => $data['group_name'],
+            'series' => $data['series']
+        ];
+        $featuresData = $data['features'];
+        $CodeData = [
+            'created_type' => $data['created_type'],
+            'code' =>  static::changeCodeToUppercase($data['code']),
+            'access_type' => $data['access_type'],
+            'usage_limit' => $data['usage_limit'],
+            'usage_limit_per_user' => $data['usage_limit_per_user'],
+            'first_buy' => $data['first_buy'],
+            'has_market' => $data['has_market'],
+        ];
+        $userListData = $data['uuid_list'];
+        $marketData = $data['market'];
+        return array($groupData, $featuresData, $CodeData, $userListData, $marketData);
     }
+
+    /**
+     * @param array $data
+     * @return array
+     */
+    public static function prepareDataForAutoCodes(array $data): array
+    {
+        $groupData = [
+            'group_name' => $data['group_name'],
+            'series' => $data['series']
+        ];
+        $featuresData = $data['features'];
+        $CodeData = [
+            'created_type' => $data['created_type'],
+            'access_type' => $data['access_type'],
+            'usage_limit' => $data['usage_limit'],
+            'usage_limit_per_user' => $data['usage_limit_per_user'],
+            'first_buy' => $data['first_buy'],
+            'has_market' => $data['has_market'],
+        ];
+        $marketData = $data['market'];
+        return array($groupData, $featuresData, $CodeData, $marketData);
+    }
+
 
 }

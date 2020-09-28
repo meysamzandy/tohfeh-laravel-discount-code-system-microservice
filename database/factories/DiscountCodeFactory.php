@@ -28,9 +28,8 @@ class DiscountCodeFactory extends Factory
         $prefix = 'test_' ;
         $stringType = config('settings.generatorString.bothCharacter') ;
         $length = config('settings.automateCodeLength') ;
-        $code = (new SmallHelper);
         return [
-            'code' => $code->codeGenerator($prefix, $stringType, $length),
+            'code' => SmallHelper::codeGenerator($prefix, $stringType, $length),
             'created_type' => $this->faker->randomElement(['auto','manual']) ,
             'access_type' => $this->faker->randomElement(['public','private']) ,
             'usage_limit' => $this->faker->numberBetween(0,20),

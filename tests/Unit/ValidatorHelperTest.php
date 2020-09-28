@@ -106,10 +106,12 @@ class ValidatorHelperTest extends TestCase
             'usage_limit_per_user' => 1,
             'first_buy' => false,
             'has_market' => false,
-            'market_name' => '',
-            'version_major' => '',
-            'version_minor' => '',
-            'version_patch' => '',
+            'market' =>[
+                'market_name' => '',
+                'version_major' => '',
+                'version_minor' => '',
+                'version_patch' => '',
+            ],
 //            // code feature property
             'plan_id' => 1212,
             'start_time' => date('Y-m-d H:i:s', strtotime(Carbon::today()->addDays(1))),
@@ -139,10 +141,13 @@ class ValidatorHelperTest extends TestCase
             'usage_limit_per_user' => 1,
             'first_buy' => false,
             'has_market' => true,
-            'market_name' => 'myket',
-            'version_major' => 1,
-            'version_minor' => 10,
-            'version_patch' => 0,
+            'market' =>[
+                'market_name' => 'myket',
+                'version_major' => 1,
+                'version_minor' => 10,
+                'version_patch' => 0,
+            ],
+
 //            // code feature property
             'plan_id' => 1212,
             'start_time' => date('Y-m-d H:i:s', strtotime(Carbon::today()->addDays(1))),

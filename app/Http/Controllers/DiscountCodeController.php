@@ -4,7 +4,9 @@ namespace App\Http\Controllers;
 
 use App\Http\Helper\SmallHelper;
 use App\Http\Helper\ValidatorHelper;
+use App\Jobs\ProcessAutoCodeCreation;
 use App\Models\DiscountCode;
+use App\Models\DiscountCodeFeatures;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
@@ -13,6 +15,14 @@ use Illuminate\Validation\ValidationException;
 
 class DiscountCodeController extends Controller
 {
+    public const RESULT_STATUS = 'resultStats';
+    public const BODY = 'body';
+    public const MESSAGE = 'message';
+    public const STATUS_CODE = 'statusCode';
+    protected $body = null;
+    protected $message;
+    protected $statusCode = 400;
+
     protected $input ;
     public function __construct(Request $request)
     {
@@ -50,17 +60,26 @@ class DiscountCodeController extends Controller
          * @middlewares(api, CheckToken)
          */
 
+
         $validator = (new ValidatorHelper)->creationCodeValidator($request->post());
 
         if ($validator->fails()) {
 
-            return response()->json($validator->errors(),403);
+            return response()->json([self::BODY => null, self::MESSAGE => $validator->errors()])->setStatusCode(403);
 
         }
 
-        (new DiscountCode)->createCode($validator->validated());
+        $isFeatureOk = (new DiscountCodeFeatures)->checkFeatureBeforeInsert($validator->validated()['features']) ;
 
-        return response()->json($validator->validated(),200);
+        if (!$isFeatureOk) {
+
+            return response()->json([self::BODY => null, self::MESSAGE => __('messages.checkDateIntervalAndPlan')])->setStatusCode(403);
+
+        }
+        $result = (new DiscountCode)->createCode($validator->validated());
+
+//        ProcessAutoCodeCreation::dispatch(new DiscountCode,$validator->validated());
+        return response()->json([self::BODY => $result[self::BODY], self::MESSAGE => $result[self::MESSAGE]])->setStatusCode($result[self::STATUS_CODE]);
     }
 
 

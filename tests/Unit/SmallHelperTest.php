@@ -14,7 +14,7 @@ class SmallHelperTest extends TestCase
     // check if string change code to uppercase correctly
     public function testChangeCodeToUppercase(): void
     {
-        $result = (new SmallHelper)->changeCodeToUppercase('meysa120m');
+        $result = SmallHelper::changeCodeToUppercase('meysa120m');
         self::assertNotNull($result);
         self::assertIsString($result);
         self::assertSame(mb_strtoupper($result, 'utf-8'), $result);
@@ -28,7 +28,7 @@ class SmallHelperTest extends TestCase
         $prefix = strtoupper('test_') ;
         $stringType = config('settings.generatorString.bothCharacter') ;
         $length = config('settings.automateCodeLength') ;
-        $code = (new SmallHelper)->codeGenerator($prefix, $stringType, $length);
+        $code = SmallHelper::codeGenerator($prefix, $stringType, $length);
         self::assertIsString($code);
         self::assertNotNull($code);
         self::assertNotFalse( strpos($code, $prefix));
@@ -38,7 +38,7 @@ class SmallHelperTest extends TestCase
             null
         );
         self::assertInstanceOf(SmallHelper::class, $mock);
-        $code = $mock->codeGenerator($prefix, $stringType, $length);
+        $code = $mock::codeGenerator($prefix, $stringType, $length);
         self::assertNull($code);
         Mockery::close();
     }

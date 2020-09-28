@@ -6,6 +6,7 @@ use App\Http\Helper\SmallHelper;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Support\Facades\DB;
 
 class DiscountCodeFeatures extends Model
 {
@@ -22,11 +23,40 @@ class DiscountCodeFeatures extends Model
 
 
     /**
+     * @param array $features
+     * @return bool
+     */
+    public function checkFeatureBeforeInsert(array $features): bool
+    {
+        $smallHelper = new SmallHelper();
+        $count = count($features) - 1;
+        $checkinArray = $features;
+        for ($i = 0; $i < $count; $i++) {
+            foreach ($checkinArray as $key => $value) {
+                if ($i === $key) {
+                    continue;
+                }
+
+                $IntervalStart_timeStatus = $smallHelper->checkDateInterval($features[$i]['start_time'], $value['start_time'], $value['end_time']);
+                $IntervalEnd_timeStatus = $smallHelper->checkDateInterval($features[$i]['end_time'], $value['start_time'], $value['end_time']);
+                if (($features[$i]['plan_id'] === $value['plan_id']) && $IntervalStart_timeStatus) {
+                    return false;
+                }
+                if (($features[$i]['plan_id'] === $value['plan_id']) && $IntervalEnd_timeStatus) {
+                    return false;
+                }
+
+            }
+        }
+        return true;
+    }
+
+    /**
      * @param int $group_id
      * @param array $features
      * @return bool
      */
-    public function createFeatures(int $group_id, array $features): bool
+    public function checkFeatureBeforeUpdate(int $group_id, array $features): bool
     {
         $smallHelper = new SmallHelper();
         $existingFeatures = self::query()->where('group_id', $group_id)->get()->all();
@@ -46,14 +76,37 @@ class DiscountCodeFeatures extends Model
                 }
             }
         }
+        return true ;
+    }
+
+
+    /**
+     * @param int $group_id
+     * @param array $features
+     * @return array
+     */
+    public function createFeatures(int $group_id, array $features): array
+    {
+        DB::beginTransaction();
         try {
             foreach ($features as $feature) {
                 $feature['group_id'] = $group_id;
                 self::create($feature);
             }
-            return true;
+            DB::commit();
+            return [
+                'status' => true,
+                'statusCode' => 201,
+                'message' => null
+            ];
         } catch (\Exception $e) {
-            return false;
+            DB::rollback();
+            return [
+                'status' => false,
+                'statusCode' => 417,
+                'message' => $e->getMessage()
+            ];
         }
+
     }
 }
