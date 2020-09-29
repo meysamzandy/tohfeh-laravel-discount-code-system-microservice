@@ -25,7 +25,7 @@ class ProcessAutoCodeCreation implements ShouldQueue
     public function __construct(DiscountCode $codes,$data)
     {
 
-        $this->codes = new DiscountCode();
+        $this->codes = $codes;
         $this->data = $data;
     }
 
@@ -36,7 +36,7 @@ class ProcessAutoCodeCreation implements ShouldQueue
      */
     public function handle()
     {
-        $this->codes->createCode($this->data);
+         $this->codes->createCode($this->data);
 
     }
 }

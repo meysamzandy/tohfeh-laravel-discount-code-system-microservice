@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Http\Helper\ValidatorHelper;
+use App\Jobs\ProcessAutoCodeCreation;
 use App\Models\DiscountCode;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;

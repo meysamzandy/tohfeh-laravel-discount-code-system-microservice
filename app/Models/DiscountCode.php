@@ -2,8 +2,8 @@
 
 namespace App\Models;
 
-//use App\Http\Helper\SmallHelper;
 use App\Http\Helper\SmallHelper;
+use App\Jobs\ProcessAutoCodeCreation;
 use Exception;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -172,7 +172,6 @@ class DiscountCode extends Model
             return SmallHelper::returnStatus(false, 417,null,$e->getMessage());
         }
     }
-
 
 
 
