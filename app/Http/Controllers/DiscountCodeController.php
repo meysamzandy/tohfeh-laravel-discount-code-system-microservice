@@ -2,11 +2,8 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Helper\SmallHelper;
 use App\Http\Helper\ValidatorHelper;
-use App\Jobs\ProcessAutoCodeCreation;
 use App\Models\DiscountCode;
-use App\Models\DiscountCodeFeatures;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
@@ -69,7 +66,7 @@ class DiscountCodeController extends Controller
 
         }
 
-        $isFeatureOk = (new DiscountCodeFeatures)->checkFeatureBeforeInsert($validator->validated()['features']) ;
+        $isFeatureOk = (new ValidatorHelper)->validateFeatureArray($validator->validated()['features']) ;
 
         if (!$isFeatureOk) {
 

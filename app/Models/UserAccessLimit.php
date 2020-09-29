@@ -16,21 +16,24 @@ class UserAccessLimit extends Model
 
 
     /**
-     * @param int $code_id
-     * @param $uuid
-     * @return Builder|Model|null
+     * @param $CodeData
+     * @param $userListData
+     * @param $code_id
      */
-    public function insertUserAccessLimit(int $code_id, $uuid)
+    public function createUserAccess($CodeData, $userListData, $code_id): void
     {
-        try {
-            return self::query()->create([
-                'code_id' => $code_id,
-                'uuid' => $uuid
-            ]);
-        } catch (\Exception $e) {
-            return null;
+        if ($CodeData === 'private') {
+
+            foreach ($userListData as $uuid) {
+
+                (new self(['code_id' => $code_id, 'uuid' => $uuid]))->save();
+
+            }
         }
     }
+
+
+
 
     /**
      * @param int $code_id

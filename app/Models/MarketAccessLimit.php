@@ -6,6 +6,7 @@ use Exception;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class MarketAccessLimit extends Model
 {
@@ -15,27 +16,26 @@ class MarketAccessLimit extends Model
         'code_id','market_name','version_major','version_minor','version_patch'
     ];
 
+    public function code(): BelongsTo
+    {
+        return $this->belongsTo(DiscountCode::class, 'code_id', 'id');
+    }
+
 
     /**
-     * @param int $code_id
-     * @param string $market_name
-     * @param int $version_major
-     * @param int $version_minor
-     * @param int $version_patch
-     * @return Builder|Model|null
+     * @param $CodeData
+     * @param $marketData
+     * @param $code_id
      */
-    public function insertMarketAccessLimit(int $code_id, string $market_name, int $version_major, int $version_minor, int $version_patch)
+    public function createMarket($CodeData, $marketData, $code_id): void
     {
-        try {
-            return self::query()->create([
-                'code_id' => $code_id,
-                'market_name' => $market_name,
-                'version_major' => $version_major,
-                'version_minor' => $version_minor,
-                'version_patch' => $version_patch,
-            ]);
-        } catch (Exception $e) {
-            return null;
+        if ($CodeData === true) {
+
+            foreach ($marketData as $market) {
+                $market['code_id'] = $code_id;
+                (new self($market))->save();
+            }
+
         }
     }
 

@@ -9,6 +9,10 @@ use Illuminate\Support\Facades\Validator;
 class ValidatorHelper
 {
 
+    /**
+     * @param $data
+     * @return \Illuminate\Contracts\Validation\Validator
+     */
     public function creationCodeValidator($data): \Illuminate\Contracts\Validation\Validator
     {
         return Validator::make($data,
@@ -62,4 +66,35 @@ class ValidatorHelper
                 'after_or_equal' => __('messages.after_or_equal'),
             ]);
     }
+
+
+    /**
+     * @param array $features
+     * @return bool
+     */
+    public function validateFeatureArray(array $features): bool
+    {
+        $count = count($features) - 1;
+        $checkinArray = $features;
+        for ($i = 0; $i < $count; $i++) {
+            foreach ($checkinArray as $key => $value) {
+                if ($i === $key) {
+                    continue;
+                }
+
+                $IntervalStart_timeStatus = (new SmallHelper)->checkDateInterval($features[$i]['start_time'], $value['start_time'], $value['end_time']);
+                $IntervalEnd_timeStatus = (new SmallHelper)->checkDateInterval($features[$i]['end_time'], $value['start_time'], $value['end_time']);
+                if (($features[$i]['plan_id'] === $value['plan_id']) && $IntervalStart_timeStatus) {
+                    return false;
+                }
+                if (($features[$i]['plan_id'] === $value['plan_id']) && $IntervalEnd_timeStatus) {
+                    return false;
+                }
+
+            }
+        }
+        return true;
+    }
+
+
 }

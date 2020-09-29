@@ -22,33 +22,19 @@ class DiscountCodeFeatures extends Model
     }
 
 
+
     /**
-     * @param array $features
-     * @return bool
+     * @param $featuresData
+     * @param $group_id
      */
-    public function checkFeatureBeforeInsert(array $features): bool
+    public function createFeature($featuresData, $group_id): void
     {
-        $smallHelper = new SmallHelper();
-        $count = count($features) - 1;
-        $checkinArray = $features;
-        for ($i = 0; $i < $count; $i++) {
-            foreach ($checkinArray as $key => $value) {
-                if ($i === $key) {
-                    continue;
-                }
+        foreach ($featuresData as $feature) {
 
-                $IntervalStart_timeStatus = $smallHelper->checkDateInterval($features[$i]['start_time'], $value['start_time'], $value['end_time']);
-                $IntervalEnd_timeStatus = $smallHelper->checkDateInterval($features[$i]['end_time'], $value['start_time'], $value['end_time']);
-                if (($features[$i]['plan_id'] === $value['plan_id']) && $IntervalStart_timeStatus) {
-                    return false;
-                }
-                if (($features[$i]['plan_id'] === $value['plan_id']) && $IntervalEnd_timeStatus) {
-                    return false;
-                }
+            $feature['group_id'] = $group_id;
+            (new self($feature))->save();
 
-            }
         }
-        return true;
     }
 
     /**
@@ -80,33 +66,33 @@ class DiscountCodeFeatures extends Model
     }
 
 
-    /**
-     * @param int $group_id
-     * @param array $features
-     * @return array
-     */
-    public function createFeatures(int $group_id, array $features): array
-    {
-        DB::beginTransaction();
-        try {
-            foreach ($features as $feature) {
-                $feature['group_id'] = $group_id;
-                self::create($feature);
-            }
-            DB::commit();
-            return [
-                'status' => true,
-                'statusCode' => 201,
-                'message' => null
-            ];
-        } catch (\Exception $e) {
-            DB::rollback();
-            return [
-                'status' => false,
-                'statusCode' => 417,
-                'message' => $e->getMessage()
-            ];
-        }
-
-    }
+//    /**
+//     * @param int $group_id
+//     * @param array $features
+//     * @return array
+//     */
+//    public function createFeatures(int $group_id, array $features): array
+//    {
+//        DB::beginTransaction();
+//        try {
+//            foreach ($features as $feature) {
+//                $feature['group_id'] = $group_id;
+//                self::create($feature);
+//            }
+//            DB::commit();
+//            return [
+//                'status' => true,
+//                'statusCode' => 201,
+//                'message' => null
+//            ];
+//        } catch (\Exception $e) {
+//            DB::rollback();
+//            return [
+//                'status' => false,
+//                'statusCode' => 417,
+//                'message' => $e->getMessage()
+//            ];
+//        }
+//
+//    }
 }

@@ -9,7 +9,10 @@ use Illuminate\Http\Request;
 
 class SmallHelper
 {
-
+    public const RESULT_STATS = 'resultStats';
+    public const STATUS_CODE = 'statusCode';
+    public const BODY = 'body';
+    public const MESSAGE = 'message';
     /**
      * @param $code
      * @return string
@@ -102,6 +105,23 @@ class SmallHelper
         ];
         $marketData = $data['market'];
         return array($groupData, $featuresData, $CodeData, $marketData);
+    }
+
+    /**
+     * @param bool $resultStatus
+     * @param int $statusCode
+     * @param null $body
+     * @param null $message
+     * @return array
+     */
+    public static function returnStatus(bool $resultStatus, int $statusCode, $body = null, $message = null): array
+    {
+        return [
+            self::RESULT_STATS => $resultStatus,
+            self::STATUS_CODE => $statusCode,
+            self::BODY => $body,
+            self::MESSAGE => $message
+        ];
     }
 
 
