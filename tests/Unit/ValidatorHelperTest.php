@@ -106,21 +106,26 @@ class ValidatorHelperTest extends TestCase
             'usage_limit_per_user' => 1,
             'first_buy' => false,
             'has_market' => false,
-            'market' =>[
+            'market' => [
                 'market_name' => '',
                 'version_major' => '',
                 'version_minor' => '',
                 'version_patch' => '',
             ],
 //            // code feature property
-            'plan_id' => 1212,
-            'start_time' => date('Y-m-d H:i:s', strtotime(Carbon::today()->addDays(1))),
-            'end_time' => date('Y-m-d H:i:s', strtotime(Carbon::today()->addDays(5))),
-            'code_type' => 'price',
-            'percent' => 1,
-            'limit_percent_price' => '',
-            'price' => 1000,
-            'description' => 'a sample text for description',
+            'features' => [
+                [
+                    'plan_id' => 1212,
+                    'start_time' => date('Y-m-d H:i:s', strtotime(Carbon::today()->addDays(1))),
+                    'end_time' => date('Y-m-d H:i:s', strtotime(Carbon::today()->addDays(5))),
+                    'code_type' => 'price',
+                    'percent' => 1,
+                    'limit_percent_price' => '',
+                    'price' => 1000,
+                    'description' => 'a sample text for description',
+                ]
+
+            ]
 
         ];
         $result = (new ValidatorHelper)->creationCodeValidator($data);
@@ -133,7 +138,9 @@ class ValidatorHelperTest extends TestCase
             'series' => '',
             //code property
             'created_type' => 'auto', // if auto code should be empty
-            'creation_code_count' => 10 ,
+            'creation_code_count' => 10,
+            'prefix' => 'test_',
+            'stringType' => 0,
             'code' => '',
             'access_type' => 'public',
             'uuid_list' => '',
@@ -141,27 +148,105 @@ class ValidatorHelperTest extends TestCase
             'usage_limit_per_user' => 1,
             'first_buy' => false,
             'has_market' => true,
-            'market' =>[
-                'market_name' => 'myket',
-                'version_major' => 1,
-                'version_minor' => 10,
-                'version_patch' => 0,
+            'market' => [
+                [
+                    'market_name' => 'myket',
+                    'version_major' => 1,
+                    'version_minor' => 10,
+                    'version_patch' => 0,
+                ]
             ],
 
 //            // code feature property
-            'plan_id' => 1212,
-            'start_time' => date('Y-m-d H:i:s', strtotime(Carbon::today()->addDays(1))),
-            'end_time' => date('Y-m-d H:i:s', strtotime(Carbon::today()->addDays(5))),
-            'code_type' => 'price',
-            'percent' => 1,
-            'limit_percent_price' => '',
-            'price' => 1000,
-            'description' => 'a sample text for description',
-            
+
+            'features' => [
+                [
+                    'plan_id' => 1212,
+                    'start_time' => date('Y-m-d H:i:s', strtotime(Carbon::today()->addDays(1))),
+                    'end_time' => date('Y-m-d H:i:s', strtotime(Carbon::today()->addDays(5))),
+                    'code_type' => 'price',
+                    'percent' => 1,
+                    'limit_percent_price' => '',
+                    'price' => 1000,
+                    'description' => 'a sample text for description',
+                ]
+
+            ]
+
         ];
         $result = (new ValidatorHelper)->creationCodeValidator($data);
         self::assertTrue($result->passes());
 
+    }
+
+    public function testValidateFeatureArray() :void
+    {
+        // plan id same and time has Common interval
+        $features = [
+            [
+                'plan_id' => 1212,
+                'start_time' => date('Y-m-d H:i:s', strtotime(Carbon::today()->addDays(1))),
+                'end_time' => date('Y-m-d H:i:s', strtotime(Carbon::today()->addDays(5))),
+            ],
+            [
+                'plan_id' => 1212,
+                'start_time' => date('Y-m-d H:i:s', strtotime(Carbon::today()->addDays(3))),
+                'end_time' => date('Y-m-d H:i:s', strtotime(Carbon::today()->addDays(8))),
+            ],
+            [
+                'plan_id' => 1212,
+                'start_time' => date('Y-m-d H:i:s', strtotime(Carbon::today()->addDays(9))),
+                'end_time' => date('Y-m-d H:i:s', strtotime(Carbon::today()->addDays(10))),
+            ]
+
+        ];
+        $result = (new ValidatorHelper)->validateFeatureArray($features);
+        self::assertFalse($result);
+
+
+        // plan id different but time has Common interval
+        $features = [
+            [
+                'plan_id' => 1212,
+                'start_time' => date('Y-m-d H:i:s', strtotime(Carbon::today()->addDays(1))),
+                'end_time' => date('Y-m-d H:i:s', strtotime(Carbon::today()->addDays(5))),
+            ],
+            [
+                'plan_id' => 1213,
+                'start_time' => date('Y-m-d H:i:s', strtotime(Carbon::today()->addDays(3))),
+                'end_time' => date('Y-m-d H:i:s', strtotime(Carbon::today()->addDays(8))),
+            ],
+            [
+                'plan_id' => 1214,
+                'start_time' => date('Y-m-d H:i:s', strtotime(Carbon::today()->addDays(7))),
+                'end_time' => date('Y-m-d H:i:s', strtotime(Carbon::today()->addDays(10))),
+            ]
+
+        ];
+        $result = (new ValidatorHelper)->validateFeatureArray($features);
+        self::assertTrue($result);
+
+        // features are valid
+        $features = [
+            [
+                'plan_id' => 1212,
+                'start_time' => date('Y-m-d H:i:s', strtotime(Carbon::today()->addDays(1))),
+                'end_time' => date('Y-m-d H:i:s', strtotime(Carbon::today()->addDays(3))),
+            ],
+            [
+                'plan_id' => 1213,
+                'start_time' => date('Y-m-d H:i:s', strtotime(Carbon::today()->addDays(5))),
+                'end_time' => date('Y-m-d H:i:s', strtotime(Carbon::today()->addDays(7))),
+            ],
+            [
+                'plan_id' => 1214,
+                'start_time' => date('Y-m-d H:i:s', strtotime(Carbon::today()->addDays(8))),
+                'end_time' => date('Y-m-d H:i:s', strtotime(Carbon::today()->addDays(10))),
+            ]
+
+        ];
+        $result = (new ValidatorHelper)->validateFeatureArray($features);
+        self::assertTrue($result);
     }
 
     protected function tearDown(): void
