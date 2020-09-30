@@ -49,6 +49,11 @@ class UserAccessLimitTest extends TestCase
 
         $userHasAccess = (new UserAccessLimit)->selectUserAccessLimit(1,'2d3c9de4-3831-4988-8afb-710fda2e740c');
         self::assertFalse($userHasAccess);
+
+        // check if exception work
+        Artisan::call('migrate:rollback');
+        $userHasAccess = (new UserAccessLimit)->selectUserAccessLimit(1,'2d3c9de4-3831-4988-8afb-sss');
+        self::assertFalse($userHasAccess);
     }
 
     protected function tearDown(): void

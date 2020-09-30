@@ -6,7 +6,7 @@ use App\Models\MarketAccessLimit;
 use Illuminate\Support\Facades\Artisan;
 use Tests\TestCase;
 
-class MarketAccessLimitControllerTest extends TestCase
+class MarketAccessLimitTest extends TestCase
 {
 
     public function setUp(): void
@@ -15,7 +15,11 @@ class MarketAccessLimitControllerTest extends TestCase
         Artisan::call('migrate:refresh --seed --seeder=MarketAccessLimitSeeder');
     }
 
-
+    public function testCode()
+    {
+        $market =  MarketAccessLimit::all();
+        dd($market);
+    }
     public function testCreateMarket(): void
     {
         // if has_market true
@@ -67,6 +71,11 @@ class MarketAccessLimitControllerTest extends TestCase
         $hasMarketLimit = (new MarketAccessLimit)->selectMarketAccessLimit($getFirstRowMarket->code_id, $getFirstRowMarket->market_name, $getFirstRowMarket->version_major, $getFirstRowMarket->version_minor, $getFirstRowMarket->version_patch);
         self::assertTrue($hasMarketLimit);
 
+        $hasMarketLimit = (new MarketAccessLimit)->selectMarketAccessLimit(1, 'myket', 1, 0, 1);
+        self::assertFalse($hasMarketLimit);
+
+        // check if exception work
+        Artisan::call('migrate:rollback');
         $hasMarketLimit = (new MarketAccessLimit)->selectMarketAccessLimit(1, 'myket', 1, 0, 1);
         self::assertFalse($hasMarketLimit);
     }

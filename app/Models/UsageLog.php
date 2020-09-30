@@ -19,7 +19,7 @@ class UsageLog extends Model
      * @param $code_id
      * @param $code
      * @param $uuid
-     * @return Builder|Model|null
+     * @return false|Builder|Model
      */
     public function insertUsageLog($code_id, $code, $uuid)
     {
@@ -30,7 +30,7 @@ class UsageLog extends Model
                 'uuid' => $uuid
             ]);
         } catch (\Exception $e) {
-            return null;
+            return false;
         }
     }
 
