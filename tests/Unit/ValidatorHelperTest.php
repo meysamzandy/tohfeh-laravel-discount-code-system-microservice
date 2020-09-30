@@ -181,7 +181,7 @@ class ValidatorHelperTest extends TestCase
 
     public function testValidateFeatureArray() :void
     {
-        // plan id same and time has Common interval in end_time
+        // plan id same and time has Common interval in start_time
         $features = [
             [
                 'plan_id' => 1212,
@@ -190,7 +190,7 @@ class ValidatorHelperTest extends TestCase
             ],
             [
                 'plan_id' => 1212,
-                'start_time' => date('Y-m-d H:i:s', strtotime(Carbon::today()->addDays(6))),
+                'start_time' => date('Y-m-d H:i:s', strtotime(Carbon::today()->subDays(6))),
                 'end_time' => date('Y-m-d H:i:s', strtotime(Carbon::today()->addDays(8))),
             ],
             [

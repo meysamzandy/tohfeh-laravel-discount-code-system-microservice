@@ -18,7 +18,9 @@ class MarketAccessLimitTest extends TestCase
     public function testCode()
     {
         $market =  MarketAccessLimit::all();
-        dd($market);
+        $getCode = (new MarketAccessLimit())->find($market[0]->id)->code->code;
+        self::assertNotNull($getCode);
+        self::assertIsString($getCode);
     }
     public function testCreateMarket(): void
     {
