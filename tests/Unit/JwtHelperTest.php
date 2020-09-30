@@ -70,6 +70,13 @@ class JwtHelperTest extends TestCase
         self::assertFalse($data['result']);
         self::assertEquals('Token not provided', $data['body']);
 
+        //Token expired
+        $data = ['fake' => ' fake',];
+        $token = JwtHelper::encodeJwt($data, 0);
+        $data = JwtHelper::decodeJwt(config('settings.jwt.key'), $token);
+        self::assertIsArray($data);
+        self::assertFalse($data['result']);
+
         
         $data = ['fake' => ' fake',];
         $token = JwtHelper::encodeJwt($data, 5);
