@@ -42,7 +42,7 @@ class DiscountCodeFeatures extends Model
      * @param array $features
      * @return bool
      */
-    public function checkFeatureBeforeUpdate(int $group_id, array $features): bool
+    public function checkFeatureBeforeAddToExistingCode(int $group_id, array $features): bool
     {
         $smallHelper = new SmallHelper();
         $existingFeatures = self::query()->where('group_id', $group_id)->get()->all();
@@ -66,33 +66,33 @@ class DiscountCodeFeatures extends Model
     }
 
 
-//    /**
-//     * @param int $group_id
-//     * @param array $features
-//     * @return array
-//     */
-//    public function createFeatures(int $group_id, array $features): array
-//    {
-//        DB::beginTransaction();
-//        try {
-//            foreach ($features as $feature) {
-//                $feature['group_id'] = $group_id;
-//                self::create($feature);
-//            }
-//            DB::commit();
-//            return [
-//                'status' => true,
-//                'statusCode' => 201,
-//                'message' => null
-//            ];
-//        } catch (\Exception $e) {
-//            DB::rollback();
-//            return [
-//                'status' => false,
-//                'statusCode' => 417,
-//                'message' => $e->getMessage()
-//            ];
-//        }
-//
-//    }
+    /**
+     * @param int $group_id
+     * @param array $features
+     * @return array
+     */
+    public function addFeaturesToExistingCode(int $group_id, array $features): array
+    {
+        DB::beginTransaction();
+        try {
+            foreach ($features as $feature) {
+                $feature['group_id'] = $group_id;
+                self::create($feature);
+            }
+            DB::commit();
+            return [
+                'status' => true,
+                'statusCode' => 201,
+                'message' => null
+            ];
+        } catch (\Exception $e) {
+            DB::rollback();
+            return [
+                'status' => false,
+                'statusCode' => 417,
+                'message' => $e->getMessage()
+            ];
+        }
+
+    }
 }
