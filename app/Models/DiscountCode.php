@@ -46,7 +46,7 @@ class DiscountCode extends Model
     public function users(): ?HasMany
     {
         try {
-            return $this->hasMany(MarketAccessLimit::class,'code_id' , 'id');
+            return $this->hasMany(UserAccessLimit::class,'code_id' , 'id');
         } catch (Exception $e) {
             return null ;
         }
