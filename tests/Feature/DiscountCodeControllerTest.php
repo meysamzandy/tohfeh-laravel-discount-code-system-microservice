@@ -154,9 +154,14 @@ class DiscountCodeControllerTest extends TestCase
             'price' => 1000,
             'description' => 'a sample text for description',
         ]);
+        $this->assertDatabaseHas('success_jobs', [
+            'resultStats' => 1,
+            'statusCode' => 201,
+        ]);
         $this->assertDatabaseCount('discount_code_groups', 1);
         $this->assertDatabaseCount('discount_code_features', 1);
         $this->assertDatabaseCount('discount_codes', 5);
+        $this->assertDatabaseCount('success_jobs', 1);
 
 
         // create manual code successfully for 1

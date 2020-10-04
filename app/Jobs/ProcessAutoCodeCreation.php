@@ -3,6 +3,7 @@
 namespace App\Jobs;
 
 use App\Models\DiscountCode;
+use App\Models\SuccessJobs;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
@@ -37,7 +38,7 @@ class ProcessAutoCodeCreation implements ShouldQueue
 
     public function __construct($data)
     {
-        $this->data = $data ;
+        $this->data = $data;
     }
 
     /**
@@ -47,7 +48,9 @@ class ProcessAutoCodeCreation implements ShouldQueue
      */
     public function handle()
     {
-        $codeModel = new DiscountCode() ;
-        $codeModel->createCode($this->data);
+        $codeModel = new DiscountCode();
+        $result = $codeModel->createCode($this->data);
+        $successJobs = new SuccessJobs($result);
+        $successJobs->save();
     }
 }
