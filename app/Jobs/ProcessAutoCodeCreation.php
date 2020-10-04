@@ -20,7 +20,7 @@ class ProcessAutoCodeCreation implements ShouldQueue
      *
      * @var int
      */
-    public $tries = 25;
+    public $tries = 10;
 
     /**
      * The maximum number of exceptions to allow before failing.
@@ -33,7 +33,7 @@ class ProcessAutoCodeCreation implements ShouldQueue
      *
      * @var int
      */
-    public $timeout = 3600;
+    public $timeout = 3600 * 4;
 
     public function __construct($data)
     {

@@ -49,7 +49,7 @@ class DiscountCodeController extends Controller
      * @return JsonResponse
      * @throws ValidationException
      */
-    public function store(Request $request)
+    public function store(Request $request): JsonResponse
     {
         /**
 
@@ -58,7 +58,7 @@ class DiscountCodeController extends Controller
          * @middlewares(api, CheckToken)
          */
 
-
+        // validate code data
         $validator = (new ValidatorHelper)->creationCodeValidator($request->post());
 
         if ($validator->fails()) {
@@ -66,7 +66,7 @@ class DiscountCodeController extends Controller
             return response()->json([self::BODY => null, self::MESSAGE => $validator->errors()])->setStatusCode(403);
 
         }
-
+        // validate Feature Array
         $isFeatureOk = (new ValidatorHelper)->validateFeatureArray($validator->validated()['features']) ;
 
         if (!$isFeatureOk) {
@@ -74,11 +74,18 @@ class DiscountCodeController extends Controller
             return response()->json([self::BODY => null, self::MESSAGE => __('messages.checkDateIntervalAndPlan')])->setStatusCode(403);
 
         }
-//        $result = (new DiscountCode)->createCode($validator->validated());
-//
-        ProcessAutoCodeCreation::dispatch($validator->validated())->delay(5);
-        return response()->json( number_format(memory_get_usage(TRUE) / 1048576, 2) . ' MB');
-//        return response()->json([self::BODY => $result[self::BODY], self::MESSAGE => $result[self::MESSAGE]])->setStatusCode($result[self::STATUS_CODE]);
+        $data = $validator->validated() ;
+
+        // if code created_type is auto dispatch a job in queue
+        if ($data['created_type'] === 'auto') {
+
+            ProcessAutoCodeCreation::dispatch($data)->delay(1);
+            return response()->json([self::BODY => null, self::MESSAGE => trans('messages.codeQueued', ['count' => $data['creation_code_count']])])->setStatusCode(200);
+        }
+
+        $result = (new DiscountCode)->createCode($data);
+
+        return response()->json([self::BODY => $result[self::BODY], self::MESSAGE => $result[self::MESSAGE]])->setStatusCode($result[self::STATUS_CODE]);
     }
 
 
