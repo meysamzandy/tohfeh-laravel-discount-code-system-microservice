@@ -12,21 +12,32 @@ use Illuminate\Support\Facades\Artisan;
 
 class ProcessAutoCodeCreation implements ShouldQueue
 {
-    use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
-    protected $codes;
+    use Dispatchable, InteractsWithQueue, Queueable;
+
     protected $data;
+    /**
+     * The number of times the job may be attempted.
+     *
+     * @var int
+     */
+    public $tries = 25;
 
     /**
-     * Create a new job instance.
+     * The maximum number of exceptions to allow before failing.
      *
-     * @param DiscountCode $codes
-     * @param $data
+     * @var int
      */
-    public function __construct(DiscountCode $codes,$data)
-    {
+    public $maxExceptions = 1;
+    /**
+     * The number of seconds the job can run before timing out.
+     *
+     * @var int
+     */
+    public $timeout = 3600;
 
-        $this->codes = $codes;
-        $this->data = $data;
+    public function __construct($data)
+    {
+        $this->data = $data ;
     }
 
     /**
@@ -36,7 +47,7 @@ class ProcessAutoCodeCreation implements ShouldQueue
      */
     public function handle()
     {
-         $this->codes->createCode($this->data);
-
+        $codeModel = new DiscountCode() ;
+        $codeModel->createCode($this->data);
     }
 }
