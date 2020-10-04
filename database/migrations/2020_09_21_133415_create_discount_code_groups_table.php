@@ -18,7 +18,7 @@ class CreateDiscountCodeGroupsTable extends Migration
         Schema::create('discount_code_groups', function (Blueprint $table) {
             $table->id();
             $table->string('group_name',255)->comment('name for the group of a discount code');
-            $table->string('series',255)->unique()->nullable()->comment('use for external creation discount code api');
+            $table->string('series',255)->nullable()->unique()->comment('use for external creation discount code api');
             $table->timestamps();
         });
     }

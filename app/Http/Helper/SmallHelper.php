@@ -67,7 +67,6 @@ class SmallHelper
     {
         $groupData = [
             'group_name' => $data['group_name'],
-            'series' => $data['series']
         ];
         $featuresData = $data['features'];
         $CodeData = [
@@ -79,8 +78,8 @@ class SmallHelper
             'first_buy' => $data['first_buy'],
             'has_market' => $data['has_market'],
         ];
-        $userListData = $data['uuid_list'];
-        $marketData = $data['market'];
+        $userListData = $data['uuid_list'] ?? null;
+        $marketData = $data['market'] ?? null;
         return array($groupData, $featuresData, $CodeData, $userListData, $marketData);
     }
 
@@ -92,7 +91,7 @@ class SmallHelper
     {
         $groupData = [
             'group_name' => $data['group_name'],
-            'series' => $data['series']
+            'series' => $data['series'] ?? null,
         ];
         $featuresData = $data['features'];
         $CodeData = [
@@ -103,7 +102,7 @@ class SmallHelper
             'first_buy' => $data['first_buy'],
             'has_market' => $data['has_market'],
         ];
-        $marketData = $data['market'];
+        $marketData = $data['market']  ?? null;
         return array($groupData, $featuresData, $CodeData, $marketData);
     }
 
