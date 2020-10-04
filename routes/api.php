@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\CodeProcessing;
 use App\Http\Controllers\DiscountCodeController;
 use App\Http\Controllers\DiscountCodeFeaturesController;
 use Illuminate\Support\Facades\Route;
@@ -17,6 +18,9 @@ use Illuminate\Support\Facades\Route;
 */
 
 
+
+
+Route::get('code/{discountCode:code}', [CodeProcessing::class, 'code']);
 
 Route::group(['prefix' => 'admin', 'middleware' => 'CheckToken'], function() {
 

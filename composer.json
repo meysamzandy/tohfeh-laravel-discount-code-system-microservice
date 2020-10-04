@@ -9,13 +9,14 @@
     "license": "MIT",
     "require": {
         "php": "^7.3",
+        "ext-json": "*",
         "fideloper/proxy": "^4.2",
         "fruitcake/laravel-cors": "^2.0",
         "guzzlehttp/guzzle": "^7.0.1",
+        "hekmatinasser/verta": "^1.11",
         "laravel/framework": "^8.0",
         "laravel/tinker": "^2.0",
-        "nowakowskir/php-jwt": "^1.1",
-      "ext-json": "*"
+        "nowakowskir/php-jwt": "^1.1"
     },
     "require-dev": {
         "facade/ignition": "^2.3.6",
