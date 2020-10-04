@@ -84,7 +84,7 @@ class DiscountCodeTest extends TestCase
         ]);
 
 
-        // check if code is exsist
+        // check if code is exist
         $data = [
             //code group
             'group_name' => 'test',
@@ -138,71 +138,7 @@ class DiscountCodeTest extends TestCase
         ]);
 
 
-        // check if exception work
-        $data = [
-            //code group
-            'group_name' => 'testnamegroup',
-            'series' => '',
-            //code property
-            'created_type' => 'manual', // if auto code should be empty
-            'code' => 'fffff',
-            'access_type' => 'private',
-            'uuid_list' => [
-                '2d3c9de4-3831-4988-8afb-710fda2e740c',
-                '2d3c9de4-3831-4988-8afb-710fda2e740c',
-                '2d3c9de4-3831-4988-8afb-710fda2e740c',
-            ],
-            'usage_limit' => 1,
-            'usage_limit_per_user' => 1,
-            'first_buy' => 'sadasdasdasd asdas das dsa ',
-            'has_market' => false,
-            'market' => [
-                'market_name' => '',
-                'version_major' => '',
-                'version_minor' => '',
-                'version_patch' => '',
-            ],
-//            // code feature property
-            'features' => [
-                [
-                    'plan_id' => 0000,
-                    'start_time' => date('Y-m-d H:i:s', strtotime(Carbon::today()->addDays(1))),
-                    'end_time' => date('Y-m-d H:i:s', strtotime(Carbon::today()->addDays(5))),
-                    'code_type' => 'price',
-                    'percent' => 1,
-                    'limit_percent_price' => '',
-                    'price' => 1000,
-                    'description' => 'a sample text for description',
-                ]
 
-            ]
-
-        ];
-        $manual = (new DiscountCode())->insertManualCode($data);
-        self::assertFalse($manual['resultStats']);
-        self::assertEquals(417, $manual['statusCode']);
-        $this->assertDatabaseMissing('discount_codes', [
-            'created_type' => 'manual', // if auto code should be empty
-            'code' => 'fffff',
-            'access_type' => 'private',
-            'usage_limit' => 1,
-            'usage_limit_per_user' => 1,
-            'first_buy' => false,
-            'has_market' => false,
-        ]);
-        $this->assertDatabaseMissing('discount_code_groups', [
-            'group_name' => 'testnamegroup'
-        ]);
-        $this->assertDatabaseMissing('discount_code_features', [
-            'plan_id' => 0000,
-            'start_time' => date('Y-m-d H:i:s', strtotime(Carbon::today()->addDays(1))),
-            'end_time' => date('Y-m-d H:i:s', strtotime(Carbon::today()->addDays(5))),
-            'code_type' => 'price',
-            'percent' => 1,
-            'limit_percent_price' => '',
-            'price' => 1000,
-            'description' => 'a sample text for description',
-        ]);
     }
 
     public function testCreateCode()

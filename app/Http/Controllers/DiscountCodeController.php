@@ -63,7 +63,7 @@ class DiscountCodeController extends Controller
 
         if ($validator->fails()) {
 
-            return response()->json([self::BODY => null, self::MESSAGE => $validator->errors()])->setStatusCode(403);
+            return response()->json([self::BODY => null, self::MESSAGE => $validator->errors()])->setStatusCode(400);
 
         }
         // validate Feature Array
@@ -71,7 +71,7 @@ class DiscountCodeController extends Controller
 
         if (!$isFeatureOk) {
 
-            return response()->json([self::BODY => null, self::MESSAGE => __('messages.checkDateIntervalAndPlan')])->setStatusCode(403);
+            return response()->json([self::BODY => null, self::MESSAGE => __('messages.checkDateIntervalAndPlan')])->setStatusCode(400);
 
         }
         $data = $validator->validated() ;
