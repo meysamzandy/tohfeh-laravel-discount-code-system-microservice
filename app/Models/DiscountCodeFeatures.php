@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use App\Http\Helper\SmallHelper;
+use Exception;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -23,7 +24,7 @@ class DiscountCodeFeatures extends Model
     {
         try {
             return $this->belongsTo(DiscountCodeGroups::class, 'group_id', 'id');
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             return null;
         }
     }
@@ -43,7 +44,7 @@ class DiscountCodeFeatures extends Model
                 (new self($feature))->save();
             }
             return true;
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             return false;
         }
 
@@ -95,7 +96,7 @@ class DiscountCodeFeatures extends Model
                 'statusCode' => 201,
                 'message' => null
             ];
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             DB::rollback();
             return [
                 'status' => false,
