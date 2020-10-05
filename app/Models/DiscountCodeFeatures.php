@@ -120,8 +120,6 @@ class DiscountCodeFeatures extends Model
                 $discountData [$feature['plan_id']][] = [
                     'feature_status' => false,
                     'plan_id' => $feature['plan_id'],
-                    'start_time' => $feature['start_time'],
-                    'end_time' => $feature['end_time'],
                     'message' => __('messages.left_to_start')
                 ];
                 continue;
@@ -131,8 +129,6 @@ class DiscountCodeFeatures extends Model
                 $discountData [$feature['plan_id']][] = [
                     'feature_status' => false,
                     'plan_id' => $feature['plan_id'],
-                    'start_time' => $feature['start_time'],
-                    'end_time' => $feature['end_time'],
                     'message' => __('messages.past_from_end')
                 ];
                 continue;
@@ -191,9 +187,9 @@ class DiscountCodeFeatures extends Model
                         $data [] = $item;
                     }
                 }
-                    // if there is no eny true feature_status
+                // if there is no eny true feature_status
                 if (count($data) <= 0) {
-                    $data [] =end($value);
+                    $data [] = end($value);
                 }
                 continue;
             }
