@@ -178,24 +178,34 @@ class DiscountCodeFeatures extends Model
      */
     public function prepareFeaturesToResponse($features): array
     {
-
-        $data = [];
+        $result = [];
         $discountData = $this->processFeatures($features);
-        foreach ($discountData as $value) {
-            if (count($value) > 1) {
-                foreach ($value as $item) {
+
+        foreach ($discountData as $featuresArray) {
+
+            // if more than one features exists for a plan id
+            if (count($featuresArray) > 1) {
+                $data = [] ;
+                foreach ($featuresArray as $item) {
+                    // if there is one true feature_status then skip other false feature_status
                     if ($item['feature_status'] === true) {
                         $data [] = $item;
                     }
                 }
-                // if there is no eny true feature_status
+                // if there is more than one true feature_status then get last one by created id
+                if (count($data) > 0) {
+                    $result [] = end($data);
+                }
+
+                // if there is no any true feature_status
                 if (count($data) <= 0) {
-                    $data [] = end($value);
+                    // if there is more than one false feature_status then get last one by created id
+                    $result [] = end($featuresArray);
                 }
                 continue;
             }
-            $data [] = $value[0];
+            $result [] = $featuresArray[0];
         }
-        return $data;
+        return $result;
     }
 }
