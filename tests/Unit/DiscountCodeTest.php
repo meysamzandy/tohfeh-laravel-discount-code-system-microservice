@@ -141,7 +141,7 @@ class DiscountCodeTest extends TestCase
 
     }
 
-    public function testCreateCode()
+    public function testCreateCode(): void
     {
         // check auto code
         $data = [
@@ -285,7 +285,15 @@ class DiscountCodeTest extends TestCase
         self::assertEquals(417, $auto['statusCode']);
     }
 
-    public function testUsers()
+    public function testUsageLogs(): void
+    {
+        Artisan::call('migrate:refresh --seed --seeder=UsageLogSeeder');
+        $codes = DiscountCode::all();
+        $getUsers = (new DiscountCode())->find($codes[0]->id)->usageLogs;
+        self::assertNotNull($getUsers[0]['uuid']);
+        self::assertIsString($getUsers[0]['uuid']);
+    }
+    public function testUsers(): void
     {
         Artisan::call('migrate:refresh --seed --seeder=UserAccessLimitSeeder');
         $codes = DiscountCode::all();
@@ -294,16 +302,16 @@ class DiscountCodeTest extends TestCase
         self::assertIsString($getUsers[0]['uuid']);
     }
 
-    public function testMarket()
+    public function testMarkets(): void
     {
         Artisan::call('migrate:refresh --seed --seeder=MarketAccessLimitSeeder');
         $codes = DiscountCode::all();
-        $getMarket = (new DiscountCode())->find($codes[0]->id)->market;
+        $getMarket = (new DiscountCode())->find($codes[0]->id)->markets;
         self::assertNotNull($getMarket[0]['market_name']);
         self::assertIsString($getMarket[0]['market_name']);
     }
 
-    public function testInsertAutoCode()
+    public function testInsertAutoCode(): void
     {
 
 // insert code correctly
@@ -367,7 +375,7 @@ class DiscountCodeTest extends TestCase
         $this->assertDatabaseCount('discount_codes', 10);
     }
 
-    public function testGroup()
+    public function testGroup(): void
     {
         Artisan::call('migrate:refresh --seed --seeder=DiscountCodeSeeder');
         $codes = DiscountCode::all();
