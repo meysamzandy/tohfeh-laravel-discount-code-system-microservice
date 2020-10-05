@@ -24,7 +24,7 @@ class DiscountCodeFeatures extends Model
         try {
             return $this->belongsTo(DiscountCodeGroups::class, 'group_id', 'id');
         } catch (\Exception $e) {
-            return null ;
+            return null;
         }
     }
 
@@ -42,9 +42,9 @@ class DiscountCodeFeatures extends Model
                 $feature['group_id'] = $group_id;
                 (new self($feature))->save();
             }
-            return true ;
+            return true;
         } catch (\Exception $e) {
-            return false ;
+            return false;
         }
 
     }
@@ -64,15 +64,15 @@ class DiscountCodeFeatures extends Model
             foreach ($checkinArray as $key => $value) {
                 $IntervalStart_timeStatus = $smallHelper->checkDateInterval($features[$i]['start_time'], $value['start_time'], $value['end_time']);
                 $IntervalEnd_timeStatus = $smallHelper->checkDateInterval($features[$i]['end_time'], $value['start_time'], $value['end_time']);
-                if (((int) $features[$i]['plan_id'] === (int) $value['plan_id']) && $IntervalStart_timeStatus) {
+                if (((int)$features[$i]['plan_id'] === (int)$value['plan_id']) && $IntervalStart_timeStatus) {
                     return false;
                 }
-                if (((int) $features[$i]['plan_id'] === (int) $value['plan_id']) && $IntervalEnd_timeStatus) {
+                if (((int)$features[$i]['plan_id'] === (int)$value['plan_id']) && $IntervalEnd_timeStatus) {
                     return false;
                 }
             }
         }
-        return true ;
+        return true;
     }
 
 
@@ -104,5 +104,101 @@ class DiscountCodeFeatures extends Model
             ];
         }
 
+    }
+
+
+    /**
+     * @param  $features
+     * @return array
+     */
+    public function processFeatures($features): array
+    {
+        $discountData = [];
+        foreach ($features as $feature) {
+            // if feature doesn't start yet
+            if (now() < $feature['start_time']) {
+                $discountData [$feature['plan_id']][] = [
+                    'feature_status' => false,
+                    'plan_id' => $feature['plan_id'],
+                    'start_time' => $feature['start_time'],
+                    'end_time' => $feature['end_time'],
+                    'message' => __('messages.left_to_start')
+                ];
+                continue;
+            }
+            // if feature expired
+            if (now() > $feature['end_time']) {
+                $discountData [$feature['plan_id']][] = [
+                    'feature_status' => false,
+                    'plan_id' => $feature['plan_id'],
+                    'start_time' => $feature['start_time'],
+                    'end_time' => $feature['end_time'],
+                    'message' => __('messages.past_from_end')
+                ];
+                continue;
+            }
+            // if feature type is percent
+            if ($feature['code_type'] === 'percent') {
+                $discountData [$feature['plan_id']][] = [
+                    'feature_status' => true,
+                    'type' => $feature['code_type'],
+                    'plan_id' => $feature['plan_id'],
+                    'percent' => $feature['percent'],
+                    'limit_price' => $feature['limit_percent_price'],
+                    'description' => $feature['description'],
+                ];
+                continue;
+            }
+            // if feature type is price
+            if ($feature['code_type'] === 'price') {
+                $discountData [$feature['plan_id']][] = [
+                    'feature_status' => true,
+                    'type' => $feature['code_type'],
+                    'plan_id' => $feature['plan_id'],
+                    'price' => $feature['price'],
+                    'description' => $feature['description'],
+                ];
+                continue;
+            }
+            // if feature type is free
+            if ($feature['code_type'] === 'free') {
+                $discountData [$feature['plan_id']][] = [
+                    'feature_status' => true,
+                    'type' => $feature['code_type'],
+                    'plan_id' => $feature['plan_id'],
+                    'description' => $feature['description'],
+                ];
+                continue;
+            }
+        }
+        return $discountData;
+    }
+
+
+    /**
+     * @param $features
+     * @return array
+     */
+    public function prepareFeaturesToResponse($features): array
+    {
+
+        $data = [];
+        $discountData = $this->processFeatures($features);
+        foreach ($discountData as $value) {
+            if (count($value) > 1) {
+                foreach ($value as $item) {
+                    if ($item['feature_status'] === true) {
+                        $data [] = $item;
+                    }
+                }
+                    // if there is no eny true feature_status
+                if (count($data) <= 0) {
+                    $data [] =end($value);
+                }
+                continue;
+            }
+            $data [] = $value[0];
+        }
+        return $data;
     }
 }

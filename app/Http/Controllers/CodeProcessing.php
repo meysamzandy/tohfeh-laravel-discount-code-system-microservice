@@ -3,6 +3,8 @@
 namespace App\Http\Controllers;
 
 use App\Models\DiscountCode;
+use App\Models\DiscountCodeFeatures;
+use App\Models\DiscountCodeGroups;
 use Hekmatinasser\Verta\Verta;
 use Illuminate\Http\Request;
 
@@ -12,10 +14,12 @@ class CodeProcessing extends Controller
     public const BODY = 'body';
     public const MESSAGE = 'message';
     public const STATUS_CODE = 'statusCode';
-    
+
     public function code(DiscountCode $discountCode)
     {
+        // @todo get uui from user management token
         $uuid = '2d3c9de4-3831-4988-8afb-710fda2e740c';
+        // @todo get market from user agent
         $market = [
             'market_name' => 'caffebazar',
             "version_major" => 1,
@@ -32,7 +36,7 @@ class CodeProcessing extends Controller
             return response()->json([self::BODY => null, self::MESSAGE => __('messages.usage_limit')])->setStatusCode(403);
         }
         // check if usage limit per user has finished
-        if ($discountCode->usageLogs()->where('uuid',$uuid)->count() >= $discountCode['usage_limit_per_user']) {
+        if ($discountCode->usageLogs()->where('uuid', $uuid)->count() >= $discountCode['usage_limit_per_user']) {
             return response()->json([self::BODY => null, self::MESSAGE => __('messages.usage_limit_per_user')])->setStatusCode(403);
         }
         // check when access type is private if user has access to use the code
@@ -40,11 +44,24 @@ class CodeProcessing extends Controller
             return response()->json([self::BODY => null, self::MESSAGE => __('messages.user_limit')])->setStatusCode(403);
         }
         // check when has market is true if user has access to current market version
-        if ( ((boolean) $discountCode['has_market'] === true) && !$discountCode->markets()->where($market)->exists()) {
+        if (((boolean)$discountCode['has_market'] === true) && !$discountCode->markets()->where($market)->exists()) {
             return response()->json([self::BODY => null, self::MESSAGE => __('messages.market_limit')])->setStatusCode(403);
         }
-        dd($discountCode);
 
+        $features = (new DiscountCodeGroups())->find($discountCode['group_id'])->features;
+
+        $preparedFeatures = (new DiscountCodeFeatures())->prepareFeaturesToResponse($features);
+
+        $result = [
+            'uuid' => $uuid,
+            'code' => $discountCode['code'],
+            'first_by' => (boolean)$discountCode['first_buy'],
+            'features' => $preparedFeatures,
+        ];
+
+        return response()->json([self::BODY => $result, self::MESSAGE => null])->setStatusCode(200);
 
     }
+
+
 }
