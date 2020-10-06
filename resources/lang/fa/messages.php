@@ -6,6 +6,7 @@ return [
     'throttle' => 'ارسال بیش از اندازه درخواست. لطفا تا :seconds ثانیه دیگر صبر کنید.',
     'max' => 'ویژگی :attribute با مقدار :input بایستی کوچکتر از :max باشد.',
     'min' => 'ویژگی :attribute با مقدار :input بایستی بزرگتر از :min باشد. ',
+    'exists' => 'ویژگی :attribute با مقدار :input یافت نشد. ',
     'required' => 'ویژگی :attribute ضروری است.',
     'string' => 'ویژگی :attribute با مقدار :input بایستی از نوع رشته باشد.',
     'numeric' => 'ویژگی :attribute با مقدار :input بایستی از نوع عدد باشد.',
@@ -34,5 +35,7 @@ return [
     'left_to_start' => 'کد تخفیف روی این پلن اشتراک در آینده فعال می شود.',
     'past_from_end' => 'کد تخفیف روی این پلن اشتراک منقضی شده است.',
     'feature_not_found' => 'هیچ پلن اشتراک فعالی برای این کد تخفیف یافت نشد.',
+    'dataTokenNotExist' => 'مقدار برای آبجکت data یافت نشد',
+    'codeNotExist' => 'کد تخفیف یافت نشد'
 
 ];

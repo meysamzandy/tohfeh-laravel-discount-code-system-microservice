@@ -16,17 +16,18 @@ use Nowakowskir\JWT\TokenEncoded;
 
 class JwtHelper
 {
+    public const RESULT_STATUS = 'result_status';
     public const RESULT = 'result';
     public const BODY = 'body';
 
     /**
+     * @param $key
      * @param $data
-     * @param $expireTime
+     * @param int $expireTime
      *
      * @return string
      */
-    public static function encodeJwt($data, int $expireTime): string {
-        $key = config('settings.jwt.key');
+    public static function encodeJwt($key,$data, int $expireTime): string {
         $header = ['alg' => JWT::ALGORITHM_HS512];
         $payload = [
             self::BODY => $data,
@@ -50,50 +51,50 @@ class JwtHelper
             try {
                 $tokenEncoded->validate($key,JWT::ALGORITHM_HS512);
                 $outPut = [
-                    self::RESULT => true,
-                    self::BODY => $tokenEncoded->decode()->getPayload(),
+                    self::RESULT_STATUS => true,
+                    self::RESULT => $tokenEncoded->decode()->getPayload(),
                 ];
             } catch (IntegrityViolationException $e) {
                 // Token is not trusted
                 $outPut = [
-                    self::RESULT => false,
-                    self::BODY => $e->getMessage(),
+                    self::RESULT_STATUS => false,
+                    self::RESULT => $e->getMessage(),
                 ];
             } catch (TokenExpiredException $e) {
                 // Token expired (exp date reached)
                 $outPut = [
-                    self::RESULT => false,
-                    self::BODY => $e->getMessage(),
+                    self::RESULT_STATUS => false,
+                    self::RESULT => $e->getMessage(),
                 ];
             } catch (TokenInactiveException $e) {
                 // Token is not yet active (nbf date not reached)
                 $outPut = [
-                    self::RESULT => false,
-                    self::BODY => $e->getMessage(),
+                    self::RESULT_STATUS => false,
+                    self::RESULT => $e->getMessage(),
                 ];
             } catch (UnsecureTokenException $e) {
                 // Unsecured token
                 $outPut = [
-                    self::RESULT => false,
-                    self::BODY => $e->getMessage(),
+                    self::RESULT_STATUS => false,
+                    self::RESULT => $e->getMessage(),
                 ];
             } catch (Exception $e) {
                 // Something else gone wrong
                 $outPut = [
-                    self::RESULT => false,
-                    self::BODY => $e->getMessage(),
+                    self::RESULT_STATUS => false,
+                    self::RESULT => $e->getMessage(),
                 ];
             }
 
         } catch (EmptyTokenException $e) {
             $outPut = [
-                self::RESULT => false,
-                self::BODY => $e->getMessage(),
+                self::RESULT_STATUS => false,
+                self::RESULT => $e->getMessage(),
             ];
         } catch (Exception $e) {
             $outPut = [
-                self::RESULT => false,
-                self::BODY => $e->getMessage(),
+                self::RESULT_STATUS => false,
+                self::RESULT => $e->getMessage(),
             ];
         }
 
