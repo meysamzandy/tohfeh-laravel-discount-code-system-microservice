@@ -126,32 +126,6 @@ class DiscountCodeFeaturesTest extends TestCase
         $start_date = date('Y-m-d H:i:s', strtotime(Carbon::today()->addDays(1)));
         $end_date = date('Y-m-d H:i:s', strtotime(Carbon::today()->addDays(5)));
 
-        // check if exception work
-        $featuresData = [
-            [
-                'plan_id' => 2222,
-                'start_time' => $start_date,
-                'end_time' => $end_date,
-                'code_type' => 'price',
-                'percent' => 'dddd',
-                'limit_percent_price' => '',
-                'price' => 1000,
-                'description' => 'a sample text for description',
-            ]
-        ];
-        $addFeatures = (new DiscountCodeFeatures())->addFeaturesToExistingCode(2, $featuresData);
-        self::assertFalse($addFeatures['status']);
-        self::assertEquals(417, $addFeatures['statusCode']);
-        $this->assertDatabaseMissing('discount_code_features', [
-            'group_id' => $group->id,
-            'plan_id' => 2222,
-            'start_time' => $start_date,
-            'code_type' => 'price',
-            'percent' => 'dddd',
-            'limit_percent_price' => '',
-            'price' => 1000,
-            'description' => 'a sample text for description',
-        ]);
 
         // add to db correctly
         $featuresData = [
