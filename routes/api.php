@@ -1,5 +1,7 @@
 <?php
 
+use App\Http\Controllers\CodeCallBack;
+use App\Http\Controllers\CodeProcessing;
 use App\Http\Controllers\DiscountCodeController;
 use App\Http\Controllers\DiscountCodeFeaturesController;
 use Illuminate\Support\Facades\Route;
@@ -18,22 +20,8 @@ use Illuminate\Support\Facades\Route;
 
 
 
-Route::group(['prefix' => 'admin', 'middleware' => 'CheckToken'], function() {
 
-    Route::get('/code', [DiscountCodeController::class, 'index']);
+Route::get('code/{discountCode:code}', [CodeProcessing::class, 'code']);
 
-    Route::post('/code', [DiscountCodeController::class, 'store']);
+Route::post('code/callback', [CodeCallBack::class, 'callback']);
 
-    Route::patch('/code/{id}', [DiscountCodeController::class, 'update']);
-
-
-    Route::get('/feature', [DiscountCodeFeaturesController::class, 'index']);
-
-    Route::post('/feature', [DiscountCodeFeaturesController::class, 'store']);
-
-    Route::patch('/feature/{id}', [DiscountCodeFeaturesController::class, 'update']);
-
-    Route::delete('/feature/{id}', [DiscountCodeFeaturesController::class, 'destroy']);
-
-
-});

@@ -6,7 +6,7 @@ use App\Http\Helper\JwtHelper;
 use Closure;
 use Illuminate\Http\Request;
 
-class CheckToken
+class AdminToken
 {
     /**
      * Handle an incoming request.
@@ -18,13 +18,13 @@ class CheckToken
     public function handle(Request $request, Closure $next)
     {
 //        $data = [
-//            'password' => config('settings.jwt.password')
+//            'password' => config('settings.admin_jwt.password')
 //        ];
 //        $jwt = JwtHelper::encodeJwt($data, 36000) ;
 //        dd($jwt);
-        $password = config('settings.jwt.password');
+        $password = config('settings.admin_jwt.password');
 
-        $token = JwtHelper::decodeJwt(config('settings.jwt.key'), $request->header('token'));
+        $token = JwtHelper::decodeJwt(config('settings.admin_jwt.key'), $request->header('token'));
 
         if (!$token['result']) {
             return response()->json([__('messages.tokenIsNotValid')])->setStatusCode(403);
@@ -32,7 +32,7 @@ class CheckToken
         if (!$request->header('token')) {
             return response()->json([__('dict.tokenIsNotValid')])->setStatusCode(403);
         }
-        if ($token['body']['body']['password'] !== $password) {
+        if ($token['result']['body']['password'] !== $password) {
             return response()->json([__('dict.tokenIsNotValid')])->setStatusCode(403);
         }
         return $next($request);

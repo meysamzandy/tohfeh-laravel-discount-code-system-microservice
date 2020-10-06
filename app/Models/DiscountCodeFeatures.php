@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use App\Http\Helper\SmallHelper;
+use Exception;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -23,8 +24,8 @@ class DiscountCodeFeatures extends Model
     {
         try {
             return $this->belongsTo(DiscountCodeGroups::class, 'group_id', 'id');
-        } catch (\Exception $e) {
-            return null ;
+        } catch (Exception $e) {
+            return null;
         }
     }
 
@@ -42,9 +43,9 @@ class DiscountCodeFeatures extends Model
                 $feature['group_id'] = $group_id;
                 (new self($feature))->save();
             }
-            return true ;
-        } catch (\Exception $e) {
-            return false ;
+            return true;
+        } catch (Exception $e) {
+            return false;
         }
 
     }
@@ -64,15 +65,15 @@ class DiscountCodeFeatures extends Model
             foreach ($checkinArray as $key => $value) {
                 $IntervalStart_timeStatus = $smallHelper->checkDateInterval($features[$i]['start_time'], $value['start_time'], $value['end_time']);
                 $IntervalEnd_timeStatus = $smallHelper->checkDateInterval($features[$i]['end_time'], $value['start_time'], $value['end_time']);
-                if (((int) $features[$i]['plan_id'] === (int) $value['plan_id']) && $IntervalStart_timeStatus) {
+                if (((int)$features[$i]['plan_id'] === (int)$value['plan_id']) && $IntervalStart_timeStatus) {
                     return false;
                 }
-                if (((int) $features[$i]['plan_id'] === (int) $value['plan_id']) && $IntervalEnd_timeStatus) {
+                if (((int)$features[$i]['plan_id'] === (int)$value['plan_id']) && $IntervalEnd_timeStatus) {
                     return false;
                 }
             }
         }
-        return true ;
+        return true;
     }
 
 
@@ -95,7 +96,7 @@ class DiscountCodeFeatures extends Model
                 'statusCode' => 201,
                 'message' => null
             ];
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             DB::rollback();
             return [
                 'status' => false,
@@ -104,5 +105,107 @@ class DiscountCodeFeatures extends Model
             ];
         }
 
+    }
+
+
+    /**
+     * @param  $features
+     * @return array
+     */
+    public function processFeatures($features): array
+    {
+        $discountData = [];
+        foreach ($features as $feature) {
+            // if feature doesn't start yet
+            if (now() < $feature['start_time']) {
+                $discountData [$feature['plan_id']][] = [
+                    'feature_status' => false,
+                    'plan_id' => $feature['plan_id'],
+                    'message' => __('messages.left_to_start')
+                ];
+                continue;
+            }
+            // if feature expired
+            if (now() > $feature['end_time']) {
+                $discountData [$feature['plan_id']][] = [
+                    'feature_status' => false,
+                    'plan_id' => $feature['plan_id'],
+                    'message' => __('messages.past_from_end')
+                ];
+                continue;
+            }
+            // if feature type is percent
+            if ($feature['code_type'] === 'percent') {
+                $discountData [$feature['plan_id']][] = [
+                    'feature_status' => true,
+                    'type' => $feature['code_type'],
+                    'plan_id' => $feature['plan_id'],
+                    'percent' => $feature['percent'],
+                    'limit_price' => $feature['limit_percent_price'],
+                    'description' => $feature['description'],
+                ];
+                continue;
+            }
+            // if feature type is price
+            if ($feature['code_type'] === 'price') {
+                $discountData [$feature['plan_id']][] = [
+                    'feature_status' => true,
+                    'type' => $feature['code_type'],
+                    'plan_id' => $feature['plan_id'],
+                    'price' => $feature['price'],
+                    'description' => $feature['description'],
+                ];
+                continue;
+            }
+            // if feature type is free
+            if ($feature['code_type'] === 'free') {
+                $discountData [$feature['plan_id']][] = [
+                    'feature_status' => true,
+                    'type' => $feature['code_type'],
+                    'plan_id' => $feature['plan_id'],
+                    'description' => $feature['description'],
+                ];
+                continue;
+            }
+        }
+        return $discountData;
+    }
+
+
+    /**
+     * @param $features
+     * @return array
+     */
+    public function prepareFeaturesToResponse($features): array
+    {
+        $result = [];
+        $discountData = $this->processFeatures($features);
+
+        foreach ($discountData as $featuresArray) {
+
+            // if more than one features exists for a plan id
+            if (count($featuresArray) > 1) {
+                $data = [] ;
+                foreach ($featuresArray as $item) {
+                    // if there is one true feature_status then skip other false feature_status
+                    if ($item['feature_status'] === true) {
+                        $data [] = $item;
+                    }
+                }
+                // if there is more than one true feature_status then get last one by created id
+                if (count($data) > 0) {
+                    $result [] = end($data);
+                }
+
+                // if there is no any true feature_status
+                if (count($data) <= 0) {
+                    // if there is more than one false feature_status then get last one by created id
+                    $result [] = end($featuresArray);
+                }
+                continue;
+            }
+            $result [] = $featuresArray[0];
+        }
+        return $result;
     }
 }

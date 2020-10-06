@@ -34,7 +34,7 @@ class DiscountCode extends Model
         }
     }
 
-    public function market(): ?HasMany
+    public function markets(): ?HasMany
     {
         try {
             return $this->hasMany(MarketAccessLimit::class,'code_id' , 'id');
@@ -47,6 +47,14 @@ class DiscountCode extends Model
     {
         try {
             return $this->hasMany(UserAccessLimit::class,'code_id' , 'id');
+        } catch (Exception $e) {
+            return null ;
+        }
+    }
+    public function usageLogs(): ?HasMany
+    {
+        try {
+            return $this->hasMany(UsageLog::class,'code_id' , 'id');
         } catch (Exception $e) {
             return null ;
         }

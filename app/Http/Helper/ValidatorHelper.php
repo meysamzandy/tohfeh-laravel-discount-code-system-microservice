@@ -31,12 +31,12 @@ class ValidatorHelper
                 'usage_limit_per_user' => 'required|numeric|min:1',
                 'first_buy' => 'required|boolean',
                 'has_market' => 'required|boolean',
-                'market' => 'exclude_if:has_market,false|required|array|min:1|max:20' ,
+                'market' => 'exclude_if:has_market,false|required|array|min:1|max:20',
                 'market.*.market_name' => 'exclude_if:has_market,false|required|string|min:1|max:40',
                 'market.*.version_major' => 'exclude_if:has_market,false|required|numeric|min:0|max:999',
                 'market.*.version_minor' => 'exclude_if:has_market,false|required|numeric|min:0|max:999',
                 'market.*.version_patch' => 'exclude_if:has_market,false|required|numeric|min:0|max:999',
-                'features' => 'required|array|min:1|max:50' ,
+                'features' => 'required|array|min:1|max:50',
                 'features.*.plan_id' => 'required|numeric',
                 'features.*.start_time' => 'required|date|after_or_equal:now',
                 'features.*.end_time' => 'required|date|after:features.*.start_time',
@@ -67,6 +67,28 @@ class ValidatorHelper
             ]);
     }
 
+    /**
+     * @param $data
+     * @return \Illuminate\Contracts\Validation\Validator
+     */
+    public function callBackDataValidator($data): \Illuminate\Contracts\Validation\Validator
+    {
+        return Validator::make($data,
+            [
+                'uuid' => 'required|uuid',
+                'code' => 'required|min:6|max:12|exists:discount_codes,code',
+                'usage_result' => 'required|boolean',
+            ]
+            , [
+                'required' => __('messages.required'),
+                'boolean' => __('messages.boolean'),
+                'uuid' => __('messages.uuid'),
+                'max' => __('messages.max'),
+                'min' => __('messages.min'),
+                'exists' => __('messages.exists')
+
+            ]);
+    }
 
     /**
      * @param array $features
