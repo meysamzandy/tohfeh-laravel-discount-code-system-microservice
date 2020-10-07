@@ -1,7 +1,8 @@
 <?php
 
 use App\Http\Controllers\CodeCallBack;
-use App\Http\Controllers\CodeProcessing;
+use App\Http\Controllers\ProcessCodeForAnonymousUser;
+use App\Http\Controllers\ProcessCodeForAuthenticatedUser;
 use App\Http\Controllers\DiscountCodeController;
 use App\Http\Controllers\DiscountCodeFeaturesController;
 use Illuminate\Support\Facades\Route;
@@ -21,9 +22,9 @@ use Illuminate\Support\Facades\Route;
 
 
 
-Route::post('code/{discountCode:code}', [CodeProcessing::class, 'code']);
+Route::post('authenticated/code/{discountCode:code}', [ProcessCodeForAuthenticatedUser::class, 'code']);
 
-Route::get('anonymous/code/{discountCode:code}', [CodeProcessing::class, 'code']);
+Route::post('anonymous/code/{discountCode:code}', [ProcessCodeForAnonymousUser::class, 'code']);
 
 Route::post('discount/code/callback', [CodeCallBack::class, 'callback']);
 

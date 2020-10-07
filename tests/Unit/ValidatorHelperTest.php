@@ -282,7 +282,7 @@ class ValidatorHelperTest extends TestCase
                 "versaion" => "1.0.5"
             ]
         ];
-        $result = (new ValidatorHelper)->codeProcessingValidator($CodeProcessing);
+        $result = (new ValidatorHelper)->marketValidator($CodeProcessing);
         self::assertFalse($result->passes());
 
         // name is not correct
@@ -293,7 +293,7 @@ class ValidatorHelperTest extends TestCase
                 "version" => "1.0.5"
             ]
         ];
-        $result = (new ValidatorHelper)->codeProcessingValidator($CodeProcessing);
+        $result = (new ValidatorHelper)->marketValidator($CodeProcessing);
         self::assertFalse($result->passes());
 
         // CodeProcessing is not correct
@@ -304,7 +304,7 @@ class ValidatorHelperTest extends TestCase
                 "version" => "1.0.5"
             ]
         ];
-        $result = (new ValidatorHelper)->codeProcessingValidator($CodeProcessing);
+        $result = (new ValidatorHelper)->marketValidator($CodeProcessing);
         self::assertFalse($result->passes());
 
         // CodeProcessing data is correct
@@ -315,7 +315,7 @@ class ValidatorHelperTest extends TestCase
                 "version" => "1.0.5"
             ]
         ];
-        $result = (new ValidatorHelper)->codeProcessingValidator($CodeProcessing);
+        $result = (new ValidatorHelper)->marketValidator($CodeProcessing);
         self::assertTrue($result->passes());
     }
 

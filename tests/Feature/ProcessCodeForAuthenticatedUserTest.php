@@ -2,7 +2,7 @@
 
 namespace Tests\Feature;
 
-use App\Http\Controllers\CodeProcessing;
+use App\Http\Controllers\ProcessCodeForAuthenticatedUser;
 use App\Http\Helper\JwtHelper;
 use App\Models\DiscountCode;
 use App\Models\UsageLog;
@@ -10,9 +10,9 @@ use Carbon\Carbon;
 use Illuminate\Support\Facades\Artisan;
 use Tests\TestCase;
 
-class CodeProcessingTest extends TestCase
+class ProcessCodeForAuthenticatedUserTest extends TestCase
 {
-    public const PROCESS_CODE_URL = 'api/code/';
+    public const PROCESS_CODE_URL = 'api/authenticated/code/';
     public const CODE_URL = 'api/admin/code';
 
     public function setUp(): void
@@ -254,11 +254,25 @@ class CodeProcessingTest extends TestCase
         self::assertEquals(403, $response->status());
 
 
-        // if market data is wrong
+        // if user_token data is wrong
         // process manual public with has market false code
         $url = self::PROCESS_CODE_URL . 'CODE_TEST_52';
         $data = [
             'useddr_token' => 'ddddd',
+            'market' => [
+                "name" => "caffebazar",
+                "version" => "1.0.5"
+            ]
+        ];
+        $response = $this->post($url, $data);
+        $responseData = json_decode($response->getContent(), true);
+        self::assertEquals(400, $response->status());
+
+        // if market data is wrong
+        // process manual public with has market false code
+        $url = self::PROCESS_CODE_URL . 'CODE_TEST_52';
+        $data = [
+            'user_token' => 'ddssddd',
             'mdarket' => [
                 "nadme" => "caffebazar",
                 "vedsion" => "1.0.5"
