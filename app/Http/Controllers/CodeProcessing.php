@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Helper\SmallHelper;
+use App\Http\Helper\ValidatorHelper;
 use App\Models\DiscountCode;
 use App\Models\DiscountCodeFeatures;
 use App\Models\DiscountCodeGroups;
@@ -15,17 +17,19 @@ class CodeProcessing extends Controller
     public const MESSAGE = 'message';
     public const STATUS_CODE = 'statusCode';
 
-    public function code(DiscountCode $discountCode)
+    public function code(Request $request, DiscountCode $discountCode)
     {
         // @todo get uui from user management token
         $uuid = '2d3c9de4-3831-4988-8afb-710fda2e740c';
-        // @todo get market from user agent
-        $market = [
-            'market_name' => 'caffebazar',
-            "version_major" => 1,
-            "version_minor" => 0,
-            "version_patch" => 5
-        ];
+
+        // validate market data
+        $validator = (new ValidatorHelper)->marketValidator($request->post());
+        if ($validator->fails()) {
+
+            return response()->json([self::BODY => null, self::MESSAGE => $validator->errors()])->setStatusCode(400);
+        }
+        $market = SmallHelper::prepareMarket($validator->validated()['market']['name'], $request->input('market.version'));
+
         // check if code is unavailable
         if ($discountCode['cancel_date']) {
             $cancelDate = Verta::instance($discountCode['cancel_date']);
@@ -44,6 +48,7 @@ class CodeProcessing extends Controller
             return response()->json([self::BODY => null, self::MESSAGE => __('messages.user_limit')])->setStatusCode(403);
         }
         // check when has market is true if user has access to current market version
+
         if (((boolean)$discountCode['has_market'] === true) && !$discountCode->markets()->where($market)->exists()) {
             return response()->json([self::BODY => null, self::MESSAGE => __('messages.market_limit')])->setStatusCode(403);
         }

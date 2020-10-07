@@ -231,4 +231,18 @@ class SmallHelperTest extends TestCase
         self::assertArrayHasKey('message', $return);
 
     }
+
+    public function testPrepareMarket(): void
+    {
+        $market = SmallHelper::prepareMarket('caffebazar', '1.2.3');
+        self::assertIsArray($market);
+        self::assertArrayHasKey('market_name', $market);
+        self::assertArrayHasKey('version_major', $market);
+        self::assertArrayHasKey('version_minor', $market);
+        self::assertArrayHasKey('version_patch', $market);
+        self::assertEquals('caffebazar', $market['market_name']);
+        self::assertEquals(1, $market['version_major']);
+        self::assertEquals(2, $market['version_minor']);
+        self::assertEquals(3, $market['version_patch']);
+    }
 }

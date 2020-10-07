@@ -38,7 +38,7 @@ class CodeCallBack extends Controller
             return response()->json([self::BODY => null, self::MESSAGE => $tokenData['result']])->setStatusCode(403);
         }
 
-        // if data in token is valid
+        // if data in token is not valid
         $validator = (new ValidatorHelper)->callBackDataValidator($tokenData['result']['body']);
         if ($validator->fails()) {
             return response()->json([self::BODY => null, self::MESSAGE => $validator->errors()])->setStatusCode(400);

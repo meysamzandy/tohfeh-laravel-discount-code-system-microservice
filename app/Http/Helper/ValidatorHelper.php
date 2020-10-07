@@ -90,6 +90,20 @@ class ValidatorHelper
             ]);
     }
 
+    public function marketValidator($data): \Illuminate\Contracts\Validation\Validator
+    {
+        return Validator::make($data, [
+            'market' => 'required',
+            'market.name' => 'required|string|min:1|max:40',
+            'market.version' => 'required|string',
+        ],[
+            'required' => __('messages.required'),
+            'string' => __('messages.string'),
+            'max' => __('messages.max'),
+            'min' => __('messages.min'),
+        ]);
+    }
+
     /**
      * @param array $features
      * @return bool

@@ -21,7 +21,7 @@ use Illuminate\Support\Facades\Route;
 
 
 
-Route::get('code/{discountCode:code}', [CodeProcessing::class, 'code']);
+Route::post('code/{discountCode:code}', [CodeProcessing::class, 'code']);
 
-Route::post('code/callback', [CodeCallBack::class, 'callback']);
+Route::post('discount/code/callback', [CodeCallBack::class, 'callback']);
 

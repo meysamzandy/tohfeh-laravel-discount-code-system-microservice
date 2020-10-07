@@ -3,6 +3,7 @@
 namespace Tests\Unit;
 
 use App\Http\Helper\ValidatorHelper;
+use App\Models\DiscountCode;
 use App\Models\DiscountCodeGroups;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Artisan;
@@ -179,7 +180,7 @@ class ValidatorHelperTest extends TestCase
 
     }
 
-    public function testValidateFeatureArray() :void
+    public function testValidateFeatureArray(): void
     {
         // plan id same and time has Common interval in start_time
         $features = [
@@ -269,6 +270,71 @@ class ValidatorHelperTest extends TestCase
         ];
         $result = (new ValidatorHelper)->validateFeatureArray($features);
         self::assertTrue($result);
+    }
+
+    public function testMarketValidator(): void
+    {
+        // version is not correct
+        $market['market'] = [
+            "name" => "caffebazar",
+            "versaion" => "1.0.5"
+        ];
+        $result = (new ValidatorHelper)->marketValidator($market);
+        self::assertFalse($result->passes());
+
+        // name is not correct
+        $market['market'] = [
+            "namea" => "caffebazar",
+            "version" => "1.0.5"
+        ];
+        $result = (new ValidatorHelper)->marketValidator($market);
+        self::assertFalse($result->passes());
+
+        // market is not correct
+        $market['marketa'] = [
+            "name" => "caffebazar",
+            "version" => "1.0.5"
+        ];
+        $result = (new ValidatorHelper)->marketValidator($market);
+        self::assertFalse($result->passes());
+
+        // market data is correct
+        $market['market'] = [
+            "name" => "caffebazar",
+            "version" => "1.0.5"
+        ];
+        $result = (new ValidatorHelper)->marketValidator($market);
+        self::assertTrue($result->passes());
+    }
+
+    public function testCallBackDataValidator(): void
+    {
+        Artisan::call('migrate:refresh --seed --seeder=DiscountCodeSeeder');
+
+        // code exist in db
+        $code = DiscountCode::all()[0];
+        $data = [
+            'uuid'=> '2d3c9de4-3831-4988-8afb-710fda2e740c',
+            'code' => $code['code'],
+            'usage_result' => true
+        ];
+        $result = (new ValidatorHelper)->callBackDataValidator($data);
+        self::assertTrue($result->passes());
+
+        // code doesn't exist in db
+        $data = [
+            'uuid'=> '2d3c9de4-3831-4988-8afb-710fda2e740c',
+            'code' => 'ddaaddd',
+            'usage_result'
+        ];
+        $result = (new ValidatorHelper)->callBackDataValidator($data);
+        self::assertFalse($result->passes());
+
+        // check if data all in valid
+        $data = [
+        ];
+        $result = (new ValidatorHelper)->callBackDataValidator($data);
+        self::assertFalse($result->passes());
     }
 
     protected function tearDown(): void

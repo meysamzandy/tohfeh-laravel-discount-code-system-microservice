@@ -13,6 +13,7 @@ class SmallHelper
     public const STATUS_CODE = 'statusCode';
     public const BODY = 'body';
     public const MESSAGE = 'message';
+
     /**
      * @param $code
      * @return string
@@ -71,7 +72,7 @@ class SmallHelper
         $featuresData = $data['features'];
         $CodeData = [
             'created_type' => $data['created_type'],
-            'code' =>  static::changeCodeToUppercase($data['code']),
+            'code' => static::changeCodeToUppercase($data['code']),
             'access_type' => $data['access_type'],
             'usage_limit' => $data['usage_limit'],
             'usage_limit_per_user' => $data['usage_limit_per_user'],
@@ -102,7 +103,7 @@ class SmallHelper
             'first_buy' => $data['first_buy'],
             'has_market' => $data['has_market'],
         ];
-        $marketData = $data['market']  ?? null;
+        $marketData = $data['market'] ?? null;
         return array($groupData, $featuresData, $CodeData, $marketData);
     }
 
@@ -124,4 +125,19 @@ class SmallHelper
     }
 
 
+    /**
+     * @param $name
+     * @param $version
+     * @return array
+     */
+    public static function prepareMarket($name, $version): array
+    {
+        $market['market_name'] = $name;
+        $versionPisces = explode(".", $version);
+        $market['version_major'] = (int)$versionPisces[0];
+        $market['version_minor'] = (int)$versionPisces[1];
+        $market['version_patch'] = (int)$versionPisces[2];
+
+        return $market;
+    }
 }
