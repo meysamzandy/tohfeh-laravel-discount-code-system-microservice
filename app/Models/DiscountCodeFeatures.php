@@ -18,15 +18,11 @@ class DiscountCodeFeatures extends Model
     ];
 
     /**
-     * @return BelongsTo|null
+     * @return BelongsTo
      */
-    public function group(): ?BelongsTo
+    public function group(): BelongsTo
     {
-        try {
-            return $this->belongsTo(DiscountCodeGroups::class, 'group_id', 'id');
-        } catch (Exception $e) {
-            return null;
-        }
+        return $this->belongsTo(DiscountCodeGroups::class, 'group_id', 'id');
     }
 
 

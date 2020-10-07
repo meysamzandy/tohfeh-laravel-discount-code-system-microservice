@@ -25,39 +25,23 @@ class DiscountCode extends Model
         'group_id', 'code', 'created_type', 'access_type', 'usage_limit', 'usage_count', 'usage_limit_per_user', 'first_buy', 'has_market', 'cancel_date'
     ];
 
-    public function group(): ?BelongsTo
+    public function group(): BelongsTo
     {
-        try {
-            return $this->belongsTo(DiscountCodeGroups::class, 'group_id', 'id');
-        } catch (Exception $e) {
-            return null ;
-        }
+        return $this->belongsTo(DiscountCodeGroups::class, 'group_id', 'id');
     }
 
-    public function markets(): ?HasMany
+    public function markets(): HasMany
     {
-        try {
-            return $this->hasMany(MarketAccessLimit::class,'code_id' , 'id');
-        } catch (Exception $e) {
-            return null ;
-        }
+        return $this->hasMany(MarketAccessLimit::class,'code_id' , 'id');
     }
 
-    public function users(): ?HasMany
+    public function users(): HasMany
     {
-        try {
-            return $this->hasMany(UserAccessLimit::class,'code_id' , 'id');
-        } catch (Exception $e) {
-            return null ;
-        }
+        return $this->hasMany(UserAccessLimit::class,'code_id' , 'id');
     }
-    public function usageLogs(): ?HasMany
+    public function usageLogs(): HasMany
     {
-        try {
-            return $this->hasMany(UsageLog::class,'code_id' , 'id');
-        } catch (Exception $e) {
-            return null ;
-        }
+        return $this->hasMany(UsageLog::class,'code_id' , 'id');
     }
 
     /**
