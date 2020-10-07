@@ -37,7 +37,7 @@ class ProcessCodeForAnonymousUser extends Controller
         }
 
 
-        $market = SmallHelper::prepareMarket($validator->validated()['market']['name'], $request->input('market.version'));
+
 
         // check if code is unavailable
         if ($discountCode['cancel_date']) {
@@ -50,10 +50,11 @@ class ProcessCodeForAnonymousUser extends Controller
         }
 
         // check when has market is true if user has access to current market version
-
+        $market = SmallHelper::prepareMarket($validator->validated()['market']['name'], $request->input('market.version'));
         if (((boolean)$discountCode['has_market'] === true) && !$discountCode->markets()->where($market)->exists()) {
             return response()->json([self::BODY => null, self::MESSAGE => __('messages.market_limit')])->setStatusCode(403);
         }
+
 
         $features = (new DiscountCodeGroups())->find($discountCode['group_id'])->features;
         $preparedFeatures = (new DiscountCodeFeatures())->prepareFeaturesToResponse($features);

@@ -48,7 +48,7 @@ class ProcessCodeForAuthenticatedUser extends Controller
         
         $uuid = $tokenData['result']['body']['uuid'] ?? null;
 
-        $market = SmallHelper::prepareMarket($validator->validated()['market']['name'], $request->input('market.version'));
+
 
         // check if code is unavailable
         if ($discountCode['cancel_date']) {
@@ -67,23 +67,23 @@ class ProcessCodeForAuthenticatedUser extends Controller
         if (($discountCode['access_type'] === 'private') && !$discountCode->users()->where('uuid', $uuid)->exists()) {
             return response()->json([self::BODY => null, self::MESSAGE => __('messages.user_limit')])->setStatusCode(403);
         }
-        // check when has market is true if user has access to current market version
 
+        // check when has market is true if user has access to current market version
+        $market = SmallHelper::prepareMarket($validator->validated()['market']['name'], $request->input('market.version'));
         if (((boolean)$discountCode['has_market'] === true) && !$discountCode->markets()->where($market)->exists()) {
             return response()->json([self::BODY => null, self::MESSAGE => __('messages.market_limit')])->setStatusCode(403);
         }
 
+
         $features = (new DiscountCodeGroups())->find($discountCode['group_id'])->features;
-
         $preparedFeatures = (new DiscountCodeFeatures())->prepareFeaturesToResponse($features);
-
         $result = [
             'uuid' => $uuid,
             'code' => $discountCode['code'],
             'first_by' => (boolean)$discountCode['first_buy'],
             'features' => $preparedFeatures,
         ];
-        $result['token'] = JwtHelper::encodeJwt(config('settings.client_jwt.key'), $result, 36000);
+        $result['token'] = JwtHelper::encodeJwt(config('settings.client_jwt.key'), $result, config('settings.client_jwt.expiration'));
         return response()->json([self::BODY => $result, self::MESSAGE => null])->setStatusCode(200);
 
     }

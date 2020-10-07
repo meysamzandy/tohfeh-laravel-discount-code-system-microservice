@@ -11,6 +11,7 @@ return [
     // token for client APIs
     'client_jwt' =>[
         'key' => 'ujbnjeccb#*apzbxkwj&t%786!&b3hw7q%',
+        'expiration' => (3600 * 24) * 1
     ],
 
     'user_management_jwt' =>[
