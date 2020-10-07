@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Helper\JwtHelper;
 use App\Http\Helper\SmallHelper;
 use App\Http\Helper\ValidatorHelper;
 use App\Models\DiscountCode;
@@ -19,15 +20,28 @@ class CodeProcessing extends Controller
 
     public function code(Request $request, DiscountCode $discountCode)
     {
-        // @todo get uui from user management token
-        $uuid = '2d3c9de4-3831-4988-8afb-710fda2e740c';
+//        $data = [
+//            'uuid' => '2d3c9de4-3831-4988-8afb-710fda3e740c',
+//        ];
+//        $jwt = JwtHelper::encodeJwt(config('settings.user_management_jwt.key'), $data, 36000);
+//        dd($jwt);
+
+
 
         // validate market data
-        $validator = (new ValidatorHelper)->marketValidator($request->post());
+        $validator = (new ValidatorHelper)->codeProcessingValidator($request->post());
         if ($validator->fails()) {
-
             return response()->json([self::BODY => null, self::MESSAGE => $validator->errors()])->setStatusCode(400);
         }
+
+        $tokenData = JwtHelper::decodeJwt(config('settings.user_management_jwt.key'), $request->input('user_token'));
+        // check if token is invalid
+        if (!$tokenData['result_status']) {
+            return response()->json([self::BODY => null, self::MESSAGE => $tokenData['result']])->setStatusCode(403);
+        }
+        
+        $uuid = $tokenData['result']['body']['uuid'] ?? null;
+
         $market = SmallHelper::prepareMarket($validator->validated()['market']['name'], $request->input('market.version'));
 
         // check if code is unavailable
@@ -63,10 +77,11 @@ class CodeProcessing extends Controller
             'first_by' => (boolean)$discountCode['first_buy'],
             'features' => $preparedFeatures,
         ];
-
+        $result['token'] = JwtHelper::encodeJwt(config('settings.client_jwt.key'), $result, 36000);
         return response()->json([self::BODY => $result, self::MESSAGE => null])->setStatusCode(200);
 
     }
+
 
 
 }

@@ -13,6 +13,10 @@ return [
         'key' => 'ujbnjeccb#*apzbxkwj&t%786!&b3hw7q%',
     ],
 
+    'user_management_jwt' =>[
+        'key' => 'ujbnjeccsaaswj&t%786!&b3hw7q%',
+    ],
+
     // type of string for generate a code
     'generatorString' =>[
         'number' => '12345689',

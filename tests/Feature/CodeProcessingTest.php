@@ -3,6 +3,7 @@
 namespace Tests\Feature;
 
 use App\Http\Controllers\CodeProcessing;
+use App\Http\Helper\JwtHelper;
 use App\Models\DiscountCode;
 use App\Models\UsageLog;
 use Carbon\Carbon;
@@ -30,7 +31,6 @@ class CodeProcessingTest extends TestCase
         $response->assertStatus(404);
 
 
-        
         // create manual public with has market false code
         $data = [
             //code group
@@ -70,11 +70,18 @@ class CodeProcessingTest extends TestCase
         (new DiscountCode)->insertManualCode($data);
         // process manual public with has market false code
         $url = self::PROCESS_CODE_URL . 'CODE_TEST_50';
-        $data['market'] = [
-            "name" => "caffebazar",
-            "version" => "1.0.5"
+        $tokenData = [
+            'uuid' => '2d3c9de4-3831-4988-8afb-710fda2e740c',
         ];
-        $response = $this->post($url,$data);
+        $jwt = JwtHelper::encodeJwt(config('settings.user_management_jwt.key'), $tokenData, 36000);
+        $data = [
+            'user_token' => $jwt,
+            'market' => [
+                "name" => "caffebazar",
+                "version" => "1.0.5"
+            ]
+        ];
+        $response = $this->post($url, $data);
         $responseData = json_decode($response->getContent(), true);
         self::assertEquals(200, $response->status());
         self::assertFalse($responseData['body']['first_by']);
@@ -82,23 +89,27 @@ class CodeProcessingTest extends TestCase
         self::assertCount(1, $responseData['body']['features']);
 
 
-
-        // count up usage_limit 
-        $code = DiscountCode::query()->where('code','CODE_TEST_50')->first();
+        // count up usage_limit
+        $code = DiscountCode::query()->where('code', 'CODE_TEST_50')->first();
         ++$code->usage_count;
         $code->save();
         // process manual public with has market false code
         $url = self::PROCESS_CODE_URL . 'CODE_TEST_50';
-        $data['market'] = [
-            "name" => "caffebazar",
-            "version" => "1.0.5"
+        $tokenData = [
+            'uuid' => '2d3c9de4-3831-4988-8afb-710fda2e740c',
         ];
-        $response = $this->post($url,$data);
+        $jwt = JwtHelper::encodeJwt(config('settings.user_management_jwt.key'), $tokenData, 36000);
+        $data = [
+            'user_token' => $jwt,
+            'market' => [
+                "name" => "caffebazar",
+                "version" => "1.0.5"
+            ]
+        ];
+        $response = $this->post($url, $data);
         $responseData = json_decode($response->getContent(), true);
         self::assertEquals(403, $response->status());
         self::assertEquals('سقف مجاز استفاده از این کد به پایان رسیده است.', $responseData['message']);
-
-
 
 
         // create manual public with has market true code not exist in market
@@ -146,17 +157,23 @@ class CodeProcessingTest extends TestCase
         (new DiscountCode)->insertManualCode($data);
         // process manual public with has market false code
         $url = self::PROCESS_CODE_URL . 'CODE_TEST_51';
-        $data['market'] = [
-            "name" => "caffebazar",
-            "version" => "1.0.5"
+        $tokenData = [
+            'uuid' => '2d3c9de4-3831-4988-8afb-710fda2e740c',
         ];
-        $response = $this->post($url,$data);
+        $jwt = JwtHelper::encodeJwt(config('settings.user_management_jwt.key'), $tokenData, 36000);
+        $data = [
+            'user_token' => $jwt,
+            'market' => [
+                "name" => "caffebazar",
+                "version" => "1.0.5"
+            ]
+        ];
+        $response = $this->post($url, $data);
         $responseData = json_decode($response->getContent(), true);
         self::assertEquals(403, $response->status());
         self::assertEquals('استفاده از این کد، بر روی اپلیکیشنی که از آن استفاده میکنید، مجاز نیست.', $responseData['message']);
 
-        
-        
+
         // create manual private with has market false user not exist in user limit
         $data = [
             //code group
@@ -198,51 +215,62 @@ class CodeProcessingTest extends TestCase
         (new DiscountCode)->insertManualCode($data);
         // process manual public with has market false code
         $url = self::PROCESS_CODE_URL . 'CODE_TEST_52';
-        $data['market'] = [
-            "name" => "caffebazar",
-            "version" => "1.0.5"
+        $tokenData = [
+            'uuid' => '2d3c9de4-3831-4988-8afb-710fda5e640c',
         ];
-        $response = $this->post($url,$data);
+        $jwt = JwtHelper::encodeJwt(config('settings.user_management_jwt.key'), $tokenData, 36000);
+        $data = [
+            'user_token' => $jwt,
+            'market' => [
+                "name" => "caffebazar",
+                "version" => "1.0.5"
+            ]
+        ];
+        $response = $this->post($url, $data);
         $responseData = json_decode($response->getContent(), true);
-
         self::assertEquals(403, $response->status());
         self::assertEquals('اجازه استفاده از این کد برای شما صادر نشده است.', $responseData['message']);
 
-        
 
         // cancel code CODE_TEST_52
-        $code = DiscountCode::query()->where('code','CODE_TEST_52')->first();
-        $code->cancel_date =  date('Y-m-d H:i:s', strtotime(Carbon::today()->subDays(5)));
+        $code = DiscountCode::query()->where('code', 'CODE_TEST_52')->first();
+        $code->cancel_date = date('Y-m-d H:i:s', strtotime(Carbon::today()->subDays(5)));
         $code->save();
         // process manual public with has market false code
         $url = self::PROCESS_CODE_URL . 'CODE_TEST_52';
-        $data['market'] = [
-            "name" => "caffebazar",
-            "version" => "1.0.5"
+        $tokenData = [
+            'uuid' => '2d3c9de4-3831-4988-8afb-710fda2e740c',
         ];
-        $response = $this->post($url,$data);
+        $jwt = JwtHelper::encodeJwt(config('settings.user_management_jwt.key'), $tokenData, 36000);
+        $data = [
+            'user_token' => $jwt,
+            'market' => [
+                "name" => "caffebazar",
+                "version" => "1.0.5"
+            ]
+        ];
+        $response = $this->post($url, $data);
         $responseData = json_decode($response->getContent(), true);
         self::assertEquals(403, $response->status());
 
-        
-        
-        
+
         // if market data is wrong
         // process manual public with has market false code
         $url = self::PROCESS_CODE_URL . 'CODE_TEST_52';
-        $data1['maket'] = [
-            "nae" => "caffebazar",
-            "verion" => "1.0.5"
+        $data = [
+            'useddr_token' => 'ddddd',
+            'mdarket' => [
+                "nadme" => "caffebazar",
+                "vedsion" => "1.0.5"
+            ]
         ];
-        $response = $this->post($url,$data1);
+        $response = $this->post($url, $data);
         $responseData = json_decode($response->getContent(), true);
         self::assertEquals(400, $response->status());
 
 
-
-
         // create manual public with has market false
-        $data = [
+        $data3 = [
             //code group
             'group_name' => 'manualtest',
             'series' => '',
@@ -277,20 +305,40 @@ class CodeProcessingTest extends TestCase
             ]
 
         ]; //code is CODE_TEST_53
-        (new DiscountCode)->insertManualCode($data);
-        $code = DiscountCode::query()->where('code','CODE_TEST_53')->first();
+        (new DiscountCode)->insertManualCode($data3);
+        $code53 = DiscountCode::query()->where('code', 'CODE_TEST_53')->first();
         // count up usage_limit_per_user
-        $usageLog = new UsageLog(['code_id'=>$code->id , 'code'=> $code->code, 'uuid'=>'2d3c9de4-3831-4988-8afb-710fda2e740c']);
+        $usageLog = new UsageLog(['code_id' => $code53->id, 'code' => $code53->code, 'uuid' => '2d3c9de4-3831-4988-8afb-710fda2e740c']);
         $usageLog->save();
         // process manual public with has market false code
         $url = self::PROCESS_CODE_URL . 'CODE_TEST_53';
-        $data['market'] = [
-            "name" => "caffebazar",
-            "version" => "1.0.5"
+        $data = [
+            'uuid' => '2d3c9de4-3831-4988-8afb-710fda2e740c',
         ];
-        $response = $this->post($url,$data);
+        $jwt = JwtHelper::encodeJwt(config('settings.user_management_jwt.key'), $data, 36000);
+
+        $data1 = [
+            'user_token' => $jwt,
+            'market' => [
+                "name" => "caffebazar",
+                "version" => "1.0.5"
+            ]
+        ];
+        $response = $this->post($url, $data1);
         $responseData = json_decode($response->getContent(), true);
         self::assertEquals(403, $response->status());
         self::assertEquals('سقف مجاز استفاده از این کد برای شما به پایان رسیده است.', $responseData['message']);
+        
+        $data1 = [
+            'user_token' => 'ddddddd',
+            'market' => [
+                "name" => "caffebazar",
+                "version" => "1.0.5"
+            ]
+        ];
+        $response = $this->post($url, $data1);
+        $responseData = json_decode($response->getContent(), true);
+        self::assertEquals(403, $response->status());
+        self::assertEquals('Wrong number of segments', $responseData['message']);
     }
 }

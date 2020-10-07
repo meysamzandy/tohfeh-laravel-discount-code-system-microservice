@@ -272,38 +272,50 @@ class ValidatorHelperTest extends TestCase
         self::assertTrue($result);
     }
 
-    public function testMarketValidator(): void
+    public function testCodeProcessingValidator(): void
     {
         // version is not correct
-        $market['market'] = [
-            "name" => "caffebazar",
-            "versaion" => "1.0.5"
+        $CodeProcessing = [
+            'uuid' => '2d3c9de4-3831-4988-8afb-710fda2e740c',
+            'market' => [
+                "name" => "caffebazar",
+                "versaion" => "1.0.5"
+            ]
         ];
-        $result = (new ValidatorHelper)->marketValidator($market);
+        $result = (new ValidatorHelper)->codeProcessingValidator($CodeProcessing);
         self::assertFalse($result->passes());
 
         // name is not correct
-        $market['market'] = [
-            "namea" => "caffebazar",
-            "version" => "1.0.5"
+        $CodeProcessing = [
+            'uuid' => '2d3c9de4-3831-4988-8afb-710fda2e740c',
+            'market' => [
+                "namse" => "caffebazar",
+                "version" => "1.0.5"
+            ]
         ];
-        $result = (new ValidatorHelper)->marketValidator($market);
+        $result = (new ValidatorHelper)->codeProcessingValidator($CodeProcessing);
         self::assertFalse($result->passes());
 
-        // market is not correct
-        $market['marketa'] = [
-            "name" => "caffebazar",
-            "version" => "1.0.5"
+        // CodeProcessing is not correct
+        $CodeProcessing = [
+            'uuid' => '2d3c9de4-3831-4988-8afb-710fda2e740c',
+            'markset' => [
+                "namse" => "caffebazar",
+                "version" => "1.0.5"
+            ]
         ];
-        $result = (new ValidatorHelper)->marketValidator($market);
+        $result = (new ValidatorHelper)->codeProcessingValidator($CodeProcessing);
         self::assertFalse($result->passes());
 
-        // market data is correct
-        $market['market'] = [
-            "name" => "caffebazar",
-            "version" => "1.0.5"
+        // CodeProcessing data is correct
+        $CodeProcessing = [
+            'user_token' => '2d3c9de4-3831-4988-8afb-710fda2e740c',
+            'market' => [
+                "name" => "caffebazar",
+                "version" => "1.0.5"
+            ]
         ];
-        $result = (new ValidatorHelper)->marketValidator($market);
+        $result = (new ValidatorHelper)->codeProcessingValidator($CodeProcessing);
         self::assertTrue($result->passes());
     }
 

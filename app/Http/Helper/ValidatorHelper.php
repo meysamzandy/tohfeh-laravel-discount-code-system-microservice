@@ -90,15 +90,17 @@ class ValidatorHelper
             ]);
     }
 
-    public function marketValidator($data): \Illuminate\Contracts\Validation\Validator
+    public function codeProcessingValidator($data): \Illuminate\Contracts\Validation\Validator
     {
         return Validator::make($data, [
+            'user_token' => 'required',
             'market' => 'required',
             'market.name' => 'required|string|min:1|max:40',
             'market.version' => 'required|string',
         ],[
             'required' => __('messages.required'),
             'string' => __('messages.string'),
+            'uuid' => __('messages.uuid'),
             'max' => __('messages.max'),
             'min' => __('messages.min'),
         ]);
