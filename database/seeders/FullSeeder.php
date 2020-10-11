@@ -19,11 +19,12 @@ class FullSeeder extends Seeder
      */
     public function run(): void
     {
-        $group1 = DiscountCodeGroups::factory()->create();
-        $code1 = DiscountCode::factory(5)->create([
-            'group_id' => $group1,
+        $group = DiscountCodeGroups::factory()->create();
+
+        $codes = DiscountCode::factory(10)->create([
+            'group_id' => $group,
             'created_type' => 'auto',
-            'access_type' => 'public',
+            'access_type' => 'private',
             'usage_limit' => 50,
             'usage_count' => 0,
             'usage_limit_per_user' => 10,
@@ -32,9 +33,12 @@ class FullSeeder extends Seeder
             'cancel_date' => null
 
         ]);
-        DiscountCodeFeatures::factory(5)->create(['group_id' => $group1]);
-//        MarketAccessLimit::factory()->create(['code_id' => $code ]);
-//        UserAccessLimit::factory()->create(['code_id' => $code ]);
-//        UsageLog::factory()->create(['code_id' =>$code->id ,'code' => $code->code]);
+        DiscountCodeFeatures::factory(2)->create(['group_id' => $group]);
+        foreach ($codes as $code) {
+            MarketAccessLimit::factory()->create(['code_id' => $code ]);
+            UserAccessLimit::factory()->create(['code_id' => $code ]);
+            UsageLog::factory()->create(['code_id' =>$code->id ,'code' => $code->code]);
+        }
+
     }
 }

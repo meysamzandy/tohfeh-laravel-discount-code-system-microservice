@@ -37,7 +37,6 @@ class DiscountCodeControllerTest extends TestCase
 
         ];
         $response = $this->post($url, $data);
-        $responseData = json_decode($response->getContent(), true);
         $response->assertStatus(400);
 
 
@@ -90,7 +89,6 @@ class DiscountCodeControllerTest extends TestCase
 
         ];
         $response = $this->post($url, $data);
-        $responseData = json_decode($response->getContent(), true);
         $response->assertStatus(400);
 
         $this->assertDatabaseCount('discount_code_groups', 0);
@@ -233,15 +231,13 @@ class DiscountCodeControllerTest extends TestCase
         $response = $this->put($url);
         $response->assertStatus(405);
 
-        // check if id doesn't exist
-        $url = self::CODE_URL . 3000;
-        $response = $this->put($url);
-        $response->assertStatus(404);
 
         // check if token doesn't exist
         $url = self::CODE_URL .'/'. 1 ;
         $response = $this->put($url);
         $response->assertStatus(403);
+
+
 
         // check data validations
         $this->withoutMiddleware();
@@ -250,6 +246,16 @@ class DiscountCodeControllerTest extends TestCase
         $response = $this->put($url, $data);
         $responseData = json_decode($response->getContent(), true);
         $response->assertStatus(400);
+
+        // check if id doesn't exist
+        $url = self::CODE_URL .'/'. 3000;
+        $this->withoutMiddleware();
+        $data = [
+            'usage_limit' => 22,
+        ];
+        $response = $this->put($url,$data);
+        $responseData = json_decode($response->getContent(), true);
+        $response->assertStatus(404);
 
       //   put data correctly
         $url = self::CODE_URL .'/'. $getOneCode->id ;

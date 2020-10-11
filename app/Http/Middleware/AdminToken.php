@@ -30,10 +30,10 @@ class AdminToken
             return response()->json([__('messages.tokenIsNotValid')])->setStatusCode(403);
         }
         if (!$request->header('token')) {
-            return response()->json([__('dict.tokenIsNotValid')])->setStatusCode(403);
+            return response()->json([__('messages.tokenIsNotValid')])->setStatusCode(403);
         }
         if ($token['result']['body']['password'] !== $password) {
-            return response()->json([__('dict.tokenIsNotValid')])->setStatusCode(403);
+            return response()->json([__('messages.tokenIsNotValid')])->setStatusCode(403);
         }
         return $next($request);
     }
