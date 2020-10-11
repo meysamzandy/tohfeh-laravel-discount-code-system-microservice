@@ -3,6 +3,7 @@
 namespace Tests\Feature;
 
 use App\Http\Controllers\DiscountCodeController;
+use App\Models\DiscountCode;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Artisan;
 use Tests\TestCase;
@@ -221,6 +222,61 @@ class DiscountCodeControllerTest extends TestCase
             'price' => 1000,
             'description' => 'a sample text for description',
         ]);
+    }
+
+    public function testUpdate()
+    {
+        Artisan::call('migrate:refresh --seed --seeder=DiscountCodeSeeder');
+        $getOneCode = DiscountCode::find(1);
+        // check if wrong url
+        $url = self::CODE_URL;
+        $response = $this->put($url);
+        $response->assertStatus(405);
+
+        // check if id doesn't exist
+        $url = self::CODE_URL . 3000;
+        $response = $this->put($url);
+        $response->assertStatus(404);
+
+        // check if token doesn't exist
+        $url = self::CODE_URL .'/'. 1 ;
+        $response = $this->put($url);
+        $response->assertStatus(403);
+
+        // check data validations
+        $this->withoutMiddleware();
+        $data = [
+        ];
+        $response = $this->put($url, $data);
+        $responseData = json_decode($response->getContent(), true);
+        $response->assertStatus(400);
+
+      //   put data correctly
+        $url = self::CODE_URL .'/'. $getOneCode->id ;
+        $this->withoutMiddleware();
+        $data = [
+            'usage_limit' => 22,
+        ];
+        $response = $this->put($url, $data);
+        $responseData = json_decode($response->getContent(), true);
+        $response->assertStatus(202);
+        $this->assertDatabaseHas('discount_codes', [
+            'id' => $getOneCode->id ,
+            'usage_limit' => 22,
+        ]);
+
+        //   get exception error
+        Artisan::call('migrate:rollback');
+        $url = self::CODE_URL .'/'. $getOneCode->id ;
+        $this->withoutMiddleware();
+        $data = [
+            'usage_limit' => 25,
+        ];
+        $response = $this->put($url, $data);
+        $responseData = json_decode($response->getContent(), true);
+        $response->assertStatus(417);
+
+
     }
 
 }

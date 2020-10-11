@@ -11,13 +11,13 @@ Route::get('/code', [DiscountCodeController::class, 'index']);
 
 Route::post('/code', [DiscountCodeController::class, 'store']);
 
-Route::patch('/code/{id}', [DiscountCodeController::class, 'update']);
+Route::put('/code/{id}', [DiscountCodeController::class, 'update']);
 
 
 Route::get('/feature', [DiscountCodeFeaturesController::class, 'index']);
 
 Route::post('/feature', [DiscountCodeFeaturesController::class, 'store']);
 
-Route::patch('/feature/{id}', [DiscountCodeFeaturesController::class, 'update']);
+Route::put('/feature/{id}', [DiscountCodeFeaturesController::class, 'update']);
 
 Route::delete('/feature/{id}', [DiscountCodeFeaturesController::class, 'destroy']);

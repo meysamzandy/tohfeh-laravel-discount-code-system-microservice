@@ -319,6 +319,23 @@ class ValidatorHelperTest extends TestCase
         self::assertTrue($result->passes());
     }
 
+    public function testUpdateCodeValidator(): void
+    {
+        // version is not correct
+        $updateCodeData = [
+            'usage_limit' => '',
+        ];
+        $result = (new ValidatorHelper)->updateCodeValidator($updateCodeData);
+        self::assertFalse($result->passes());
+
+        // version is correct
+        $updateCodeData = [
+            'usage_limit' => 22,
+        ];
+        $result = (new ValidatorHelper)->updateCodeValidator($updateCodeData);
+        self::assertTrue($result->passes());
+    }
+
     public function testCallBackDataValidator(): void
     {
         Artisan::call('migrate:refresh --seed --seeder=DiscountCodeSeeder');

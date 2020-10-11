@@ -17,11 +17,12 @@ class DiscountCodeController extends Controller
     public const BODY = 'body';
     public const MESSAGE = 'message';
     public const STATUS_CODE = 'statusCode';
-    protected $body ;
+    protected $body;
     protected $message;
     protected $statusCode = 400;
 
-    protected $input ;
+    protected $input;
+
     public function __construct(Request $request)
     {
 
@@ -35,7 +36,6 @@ class DiscountCodeController extends Controller
     public function index()
     {
         /**
-
          * @get('/api/admin/code')
          * @name('generated::SpQdL4Myny9fDaQt')
          * @middlewares(api, CheckToken)
@@ -52,7 +52,6 @@ class DiscountCodeController extends Controller
     public function store(Request $request): JsonResponse
     {
         /**
-
          * @post('/api/admin/code')
          * @name('generated::U0vD3nBYAC2Z7UAZ')
          * @middlewares(api, CheckToken)
@@ -67,14 +66,14 @@ class DiscountCodeController extends Controller
 
         }
         // validate Feature Array
-        $isFeatureOk = (new ValidatorHelper)->validateFeatureArray($validator->validated()['features']) ;
+        $isFeatureOk = (new ValidatorHelper)->validateFeatureArray($validator->validated()['features']);
 
         if (!$isFeatureOk) {
 
             return response()->json([self::BODY => null, self::MESSAGE => __('messages.checkDateIntervalAndPlan')])->setStatusCode(400);
 
         }
-        $data = $validator->validated() ;
+        $data = $validator->validated();
 
         // if code created_type is auto dispatch a job in queue
         if ($data['created_type'] === 'auto') {
@@ -89,23 +88,34 @@ class DiscountCodeController extends Controller
     }
 
 
-
     /**
-     * Update the specified resource in storage.
-     *
      * @param Request $request
-     * @param DiscountCode $discountCode
-     * @return Response
+     * @param $id
+     * @return JsonResponse
      */
-    public function update(Request $request, DiscountCode $discountCode)
+    public function update(Request $request, $id): JsonResponse
     {
-        /**
+        // validate code data
+        $validator = (new ValidatorHelper)->updateCodeValidator($request->post());
 
-         * @patch('/api/admin/code/{id}')
-         * @name('generated::VqzI6Ri8PiwGP0Qs')
-         * @middlewares(api, CheckToken)
-         */
-        //
+        if ($validator->fails()) {
+
+            return response()->json([self::BODY => null, self::MESSAGE => $validator->errors()])->setStatusCode(400);
+
+        }
+        try {
+            $discountCode = DiscountCode::find((int)$id);
+
+            $discountCode->update([
+                'usage_limit' => $validator->validated()['usage_limit']
+            ]);
+
+            return response()->json([self::BODY => null, self::MESSAGE => null])->setStatusCode(202);
+        } catch (\Exception $e) {
+
+            return response()->json([self::BODY => null, self::MESSAGE => $e->getMessage()])->setStatusCode(417);
+
+        }
     }
 
 }

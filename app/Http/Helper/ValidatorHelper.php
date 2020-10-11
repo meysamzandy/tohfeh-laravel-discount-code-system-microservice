@@ -108,6 +108,17 @@ class ValidatorHelper
         ]);
     }
 
+    public function updateCodeValidator($data): \Illuminate\Contracts\Validation\Validator
+    {
+        return Validator::make($data, [
+            'usage_limit' => 'required|numeric|min:1',
+        ],[
+            'required' => __('messages.required'),
+            'numeric' => __('messages.numeric'),
+            'min' => __('messages.min'),
+        ]);
+    }
+
     /**
      * @param $data
      * @return \Illuminate\Contracts\Validation\Validator
