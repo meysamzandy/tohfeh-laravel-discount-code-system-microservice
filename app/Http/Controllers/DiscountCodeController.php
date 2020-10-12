@@ -2,9 +2,11 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Helper\SmallHelper;
 use App\Http\Helper\ValidatorHelper;
 use App\Jobs\ProcessAutoCodeCreation;
 use App\Models\DiscountCode;
+use App\Models\DiscountCodeFeatures;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
@@ -23,17 +25,11 @@ class DiscountCodeController extends Controller
 
     protected $input;
 
-    public function __construct(Request $request)
-    {
-
-    }
-
     /**
-     * Display a listing of the resource.
-     *
-     * @return Response
+     * @param Request $request
+     * @return JsonResponse|object
      */
-    public function index()
+    public function index(Request $request)
     {
         /**
          * @get('/api/admin/code')
@@ -41,6 +37,17 @@ class DiscountCodeController extends Controller
          * @middlewares(api, CheckToken)
          */
         //
+        // get page and limit
+        [$page, $limit] = SmallHelper::paginationParams($request);
+        // get query params
+        [$orderColumn, $orderBy] = SmallHelper::orderParams($request);
+        $requestParams = (new DiscountCodeFeatures())->getParams();
+        $query = DiscountCode::query();
+
+        $data = SmallHelper::fetchList($requestParams, $query, $request, $page, $limit, $orderColumn, $orderBy);
+
+        return response()->json([self::BODY => $data[self::BODY], self::MESSAGE => $data[self::MESSAGE]])->setStatusCode($data[self::STATUS_CODE]);
+
     }
 
 

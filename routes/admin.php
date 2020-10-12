@@ -7,13 +7,18 @@ use Illuminate\Support\Facades\Route;
 
 
 // prefix is admin
+
+//group
+Route::get('/group', [DiscountCodeController::class, 'index']);
+
+//code
 Route::get('/code', [DiscountCodeController::class, 'index']);
 
 Route::post('/code', [DiscountCodeController::class, 'store']);
 
 Route::put('/code/{id}', [DiscountCodeController::class, 'update']);
 
-
+//feature
 Route::get('/feature', [DiscountCodeFeaturesController::class, 'index']);
 
 Route::post('/feature', [DiscountCodeFeaturesController::class, 'store']);

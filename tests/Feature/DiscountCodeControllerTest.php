@@ -222,7 +222,7 @@ class DiscountCodeControllerTest extends TestCase
         ]);
     }
 
-    public function testUpdate()
+    public function testUpdate(): void
     {
         Artisan::call('migrate:refresh --seed --seeder=DiscountCodeSeeder');
         $getOneCode = DiscountCode::find(1);
@@ -233,10 +233,9 @@ class DiscountCodeControllerTest extends TestCase
 
 
         // check if token doesn't exist
-        $url = self::CODE_URL .'/'. 1 ;
+        $url = self::CODE_URL . '/' . 1;
         $response = $this->put($url);
         $response->assertStatus(403);
-
 
 
         // check data validations
@@ -248,17 +247,17 @@ class DiscountCodeControllerTest extends TestCase
         $response->assertStatus(400);
 
         // check if id doesn't exist
-        $url = self::CODE_URL .'/'. 3000;
+        $url = self::CODE_URL . '/' . 3000;
         $this->withoutMiddleware();
         $data = [
             'usage_limit' => 22,
         ];
-        $response = $this->put($url,$data);
+        $response = $this->put($url, $data);
         $responseData = json_decode($response->getContent(), true);
         $response->assertStatus(404);
 
-      //   put data correctly
-        $url = self::CODE_URL .'/'. $getOneCode->id ;
+        //   put data correctly
+        $url = self::CODE_URL . '/' . $getOneCode->id;
         $this->withoutMiddleware();
         $data = [
             'usage_limit' => 22,
@@ -267,13 +266,13 @@ class DiscountCodeControllerTest extends TestCase
         $responseData = json_decode($response->getContent(), true);
         $response->assertStatus(202);
         $this->assertDatabaseHas('discount_codes', [
-            'id' => $getOneCode->id ,
+            'id' => $getOneCode->id,
             'usage_limit' => 22,
         ]);
 
         //   get exception error
         Artisan::call('migrate:rollback');
-        $url = self::CODE_URL .'/'. $getOneCode->id ;
+        $url = self::CODE_URL . '/' . $getOneCode->id;
         $this->withoutMiddleware();
         $data = [
             'usage_limit' => 25,
@@ -284,5 +283,53 @@ class DiscountCodeControllerTest extends TestCase
 
 
     }
+
+    public function testIndex(): void
+    {
+        Artisan::call('migrate:refresh --seed --seeder=DiscountCodeSeeder');
+        // check if wrong url
+        $url = 'self::CODE_URL';
+        $response = $this->get($url);
+        $response->assertStatus(404);
+
+        // check if token doesn't exist
+        $url = self::CODE_URL;
+        $response = $this->get($url);
+        $response->assertStatus(403);
+
+        // check list without params
+        $url = self::CODE_URL;
+        $this->withoutMiddleware();
+        $request = $this->get($url);
+        $request->assertStatus(200);
+        $request->assertExactJson(json_decode($request->getContent(), true));
+        $data = json_decode($request->getContent(), true);
+        self::assertEquals(1, $data['body']['current_page']);
+        self::assertEquals(1, $data['body']['total']);
+
+        // check list with page and limit params
+        $url = self::CODE_URL . '?page=1&limit=1';
+        $this->withoutMiddleware();
+        $request = $this->get($url);
+        $request->assertStatus(200);
+        $request->assertExactJson(json_decode($request->getContent(), true));
+        $data = json_decode($request->getContent(), true);
+        self::assertEquals(1, $data['body']['current_page']);
+        self::assertEquals(1, $data['body']['last_page']);
+        self::assertEquals(1, $data['body']['total']);
+
+        // check list with page and limit params
+        $url = self::CODE_URL . '?page=1&limit=10&id=1&op_id==';
+        $this->withoutMiddleware();
+        $request = $this->get($url);
+        $request->assertStatus(200);
+        $request->assertExactJson(json_decode($request->getContent(), true));
+        $data = json_decode($request->getContent(), true);
+        self::assertEquals(1, $data['body']['data'][0]['id']);
+        self::assertEquals(1, $data['body']['current_page']);
+        self::assertEquals(1, $data['body']['last_page']);
+        self::assertEquals(1, $data['body']['total']);
+    }
+
 
 }
