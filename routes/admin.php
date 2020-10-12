@@ -3,13 +3,14 @@
 
 use App\Http\Controllers\DiscountCodeController;
 use App\Http\Controllers\DiscountCodeFeaturesController;
+use App\Http\Controllers\DiscountCodeGroupController;
 use Illuminate\Support\Facades\Route;
 
 
 // prefix is admin
 
 //group
-Route::get('/group', [DiscountCodeController::class, 'index']);
+Route::get('/group', [DiscountCodeGroupController::class, 'index']);
 
 //code
 Route::get('/code', [DiscountCodeController::class, 'index']);
