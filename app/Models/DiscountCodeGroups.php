@@ -6,6 +6,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use App\Models\DiscountCodeFeatures;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Support\Facades\Schema;
 
 class DiscountCodeGroups extends Model
 {
@@ -29,6 +30,14 @@ class DiscountCodeGroups extends Model
     public function codes(): HasMany
     {
         return $this->hasMany(DiscountCode::class,'group_id','id');
+    }
+
+    /**
+     * @return array|string[]
+     */
+    public function getParams(): array
+    {
+        return Schema::getColumnListing('discount_code_groups');
     }
 
 }

@@ -5,6 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\Schema;
 
 class UsageLog extends Model
 {
@@ -51,5 +52,13 @@ class UsageLog extends Model
             $usage = 0;
         }
         return $usage;
+    }
+
+    /**
+     * @return array|string[]
+     */
+    public function getParams(): array
+    {
+        return Schema::getColumnListing('usage_logs');
     }
 }

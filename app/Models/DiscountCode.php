@@ -10,6 +10,7 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Schema;
 
 
 class DiscountCode extends Model
@@ -177,6 +178,12 @@ class DiscountCode extends Model
         }
     }
 
-
+    /**
+     * @return array|string[]
+     */
+    public function getParams(): array
+    {
+        return Schema::getColumnListing('discount_codes');
+    }
 
 }

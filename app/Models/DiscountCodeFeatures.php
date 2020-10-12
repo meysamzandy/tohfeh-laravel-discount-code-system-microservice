@@ -8,6 +8,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Schema;
 
 class DiscountCodeFeatures extends Model
 {
@@ -205,5 +206,14 @@ class DiscountCodeFeatures extends Model
             $result [] = $featuresArray[0];
         }
         return $result;
+    }
+
+    /**
+     * @return array|string[]
+     */
+    public function getParams(): array
+    {
+        return Schema::getColumnListing('discount_code_features');
+
     }
 }

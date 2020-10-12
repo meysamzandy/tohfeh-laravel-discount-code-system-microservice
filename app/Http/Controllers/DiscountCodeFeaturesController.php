@@ -2,12 +2,15 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Helper\SmallHelper;
 use App\Http\Helper\ValidatorHelper;
 use App\Models\DiscountCodeFeatures;
 use App\Models\DiscountCodeGroups;
 use Exception;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
+use Illuminate\Validation\ValidationException;
 
 class DiscountCodeFeaturesController extends Controller
 {
@@ -19,12 +22,12 @@ class DiscountCodeFeaturesController extends Controller
     protected $message;
     protected $statusCode = 400;
 
+
     /**
-     * Display a listing of the resource.
-     *
-     * @return Response
+     * @param Request $request
+     * @return JsonResponse|object
      */
-    public function index()
+    public function index(Request $request)
     {
         /**
          * @get('/api/admin/feature')
@@ -32,10 +35,26 @@ class DiscountCodeFeaturesController extends Controller
          * @middlewares(api, CheckToken)
          */
         //
+
+        // get page and limit
+        [$page, $limit] = SmallHelper::paginationParams($request);
+        // get query params
+        [$orderColumn, $orderBy] = SmallHelper::orderParams($request);
+        $requestParams = (new DiscountCodeFeatures())->getParams();
+        $query = DiscountCodeFeatures::query();
+
+        $data = SmallHelper::fetchList($requestParams, $query, $request, $page, $limit, $orderColumn, $orderBy);
+
+        return response()->json([self::BODY => $data[self::BODY], self::MESSAGE => $data[self::MESSAGE]])->setStatusCode($data[self::STATUS_CODE]);
+
     }
 
 
-
+    /**
+     * @param Request $request
+     * @return JsonResponse|object
+     * @throws ValidationException
+     */
     public function store(Request $request)
     {
         /**
@@ -65,8 +84,10 @@ class DiscountCodeFeaturesController extends Controller
     }
 
 
-
-
+    /**
+     * @param $id
+     * @return JsonResponse|object
+     */
     public function destroy($id)
     {
         /**
