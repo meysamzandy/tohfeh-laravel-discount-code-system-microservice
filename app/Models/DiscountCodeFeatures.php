@@ -90,6 +90,7 @@ class DiscountCodeFeatures extends Model
             return [
                 'status' => true,
                 'statusCode' => 201,
+                'body' => null,
                 'message' => null
             ];
         } catch (Exception $e) {
@@ -97,6 +98,7 @@ class DiscountCodeFeatures extends Model
             return [
                 'status' => false,
                 'statusCode' => 417,
+                'body' => null,
                 'message' => $e->getMessage()
             ];
         }

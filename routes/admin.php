@@ -18,6 +18,4 @@ Route::get('/feature', [DiscountCodeFeaturesController::class, 'index']);
 
 Route::post('/feature', [DiscountCodeFeaturesController::class, 'store']);
 
-Route::put('/feature/{id}', [DiscountCodeFeaturesController::class, 'update']);
-
 Route::delete('/feature/{id}', [DiscountCodeFeaturesController::class, 'destroy']);

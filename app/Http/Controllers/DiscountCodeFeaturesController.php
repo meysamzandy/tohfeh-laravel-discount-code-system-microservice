@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Helper\ValidatorHelper;
 use App\Models\DiscountCodeFeatures;
 use App\Models\DiscountCodeGroups;
 use Exception;
@@ -34,12 +35,7 @@ class DiscountCodeFeaturesController extends Controller
     }
 
 
-    /**
-     * Store a newly created resource in storage.
-     *
-     * @param Request $request
-     * @return Response
-     */
+
     public function store(Request $request)
     {
         /**
@@ -48,25 +44,27 @@ class DiscountCodeFeaturesController extends Controller
          * @middlewares(api, CheckToken)
          */
         //
+
+        // validate code data
+        $validator = (new ValidatorHelper)->creationFeatureValidator($request->post());
+
+        if ($validator->fails()) {
+
+            return response()->json([self::BODY => null, self::MESSAGE => $validator->errors()])->setStatusCode(400);
+
+        }
+        // check if exist common feature in db
+        $checkFeature = (new DiscountCodeFeatures)->checkFeatureBeforeAddToExistingCode($validator->validated()['group_id'], $validator->validated()['features']);
+        if (!$checkFeature) {
+            return response()->json([self::BODY => null, self::MESSAGE => __('messages.checkDateIntervalAndPlan')])->setStatusCode(400);
+        }
+        // add features
+        $result = (new DiscountCodeFeatures)->addFeaturesToExistingCode($validator->validated()['group_id'], $validator->validated()['features']);
+
+        return response()->json([self::BODY => $result[self::BODY], self::MESSAGE => $result[self::MESSAGE]])->setStatusCode($result[self::STATUS_CODE]);
     }
 
 
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param Request $request
-     * @param DiscountCodeFeatures $discountCodeFeatures
-     * @return Response
-     */
-    public function update(Request $request, DiscountCodeFeatures $discountCodeFeatures)
-    {
-        /**
-         * @patch('/api/admin/feature/{id}')
-         * @name('generated::DYWGCPDTRY6sMIyG')
-         * @middlewares(api, CheckToken)
-         */
-        //
-    }
 
 
     public function destroy($id)

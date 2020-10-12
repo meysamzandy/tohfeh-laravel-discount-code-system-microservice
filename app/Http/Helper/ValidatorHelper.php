@@ -67,6 +67,37 @@ class ValidatorHelper
             ]);
     }
 
+    public function creationFeatureValidator($data): \Illuminate\Contracts\Validation\Validator
+    {
+        return Validator::make($data,
+            [
+                'group_id' => 'required|numeric|min:1|exists:discount_code_groups,id',
+                'features' => 'required|array|min:1|max:50',
+                'features.*.plan_id' => 'required|numeric',
+                'features.*.start_time' => 'required|date|after_or_equal:now',
+                'features.*.end_time' => 'required|date|after:features.*.start_time',
+                'features.*.code_type' => 'required|in:percent,price,free',
+                'features.*.percent' => 'exclude_unless:features.*.code_type,percent|required|numeric|min:1|max:100',
+                'features.*.limit_percent_price' => 'exclude_unless:features.*.code_type,percent|nullable|numeric|min:1|max:100',
+                'features.*.price' => 'exclude_unless:features.*.code_type,price|required|numeric|min:1',
+                'features.*.description' => 'nullable|string|min:1|max:254',
+
+            ]
+            , [
+                'required' => __('messages.required'),
+                'string' => __('messages.string'),
+                'max' => __('messages.max'),
+                'min' => __('messages.min'),
+                'array' => __('messages.array'),
+                'in' => __('messages.in'),
+                'numeric' => __('messages.numeric'),
+                'date' => __('messages.date'),
+                'after' => __('messages.after'),
+                'after_or_equal' => __('messages.after_or_equal'),
+                'exists' => __('messages.exists')
+            ]);
+    }
+
     /**
      * @param $data
      * @return \Illuminate\Contracts\Validation\Validator

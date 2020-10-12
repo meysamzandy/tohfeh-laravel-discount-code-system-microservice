@@ -4,6 +4,7 @@ namespace Tests\Unit;
 
 use App\Http\Helper\ValidatorHelper;
 use App\Models\DiscountCode;
+use App\Models\DiscountCodeFeatures;
 use App\Models\DiscountCodeGroups;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Artisan;
@@ -180,6 +181,40 @@ class ValidatorHelperTest extends TestCase
 
     }
 
+
+    public function testCreationFeatureValidator(): void
+    {
+        //check when all validation failed
+        $data = [
+
+        ];
+        $result = (new ValidatorHelper)->creationFeatureValidator($data);
+        self::assertFalse($result->passes());
+
+        Artisan::call('migrate:refresh --seed --seeder=DiscountCodeFeaturesSeeder');
+        $feature = DiscountCodeFeatures::all();
+        $getGroup = (new DiscountCodeFeatures())->find($feature[0]->id)->group->id;
+        $data = [
+            'group_id' => $getGroup,
+            'features' => [
+                [
+                    'plan_id' => 1212,
+                    'start_time' => date('Y-m-d H:i:s', strtotime(Carbon::today()->addDays(1))),
+                    'end_time' => date('Y-m-d H:i:s', strtotime(Carbon::today()->addDays(5))),
+                    'code_type' => 'price',
+                    'percent' => 1,
+                    'limit_percent_price' => '',
+                    'price' => 1000,
+                    'description' => 'a sample text for description',
+                ],
+            ]
+        ];
+        $result = (new ValidatorHelper)->creationFeatureValidator($data);
+        self::assertTrue($result->passes());
+
+    }
+
+
     public function testValidateFeatureArray(): void
     {
         // plan id same and time has Common interval in start_time
@@ -343,7 +378,7 @@ class ValidatorHelperTest extends TestCase
         // code exist in db
         $code = DiscountCode::all()[0];
         $data = [
-            'uuid'=> '2d3c9de4-3831-4988-8afb-710fda2e740c',
+            'uuid' => '2d3c9de4-3831-4988-8afb-710fda2e740c',
             'code' => $code['code'],
             'usage_result' => true
         ];
@@ -352,7 +387,7 @@ class ValidatorHelperTest extends TestCase
 
         // code doesn't exist in db
         $data = [
-            'uuid'=> '2d3c9de4-3831-4988-8afb-710fda2e740c',
+            'uuid' => '2d3c9de4-3831-4988-8afb-710fda2e740c',
             'code' => 'ddaaddd',
             'usage_result'
         ];
