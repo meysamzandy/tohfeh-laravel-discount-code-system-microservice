@@ -21,7 +21,7 @@ class ProcessAutoCodeCreation implements ShouldQueue
      *
      * @var int
      */
-    public $tries = 10;
+    public $tries = 1;
 
     /**
      * The maximum number of exceptions to allow before failing.

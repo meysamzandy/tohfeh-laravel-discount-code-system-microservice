@@ -21,6 +21,7 @@ use Illuminate\Support\Facades\Route;
 
 
 
+Route::post('create/code', [DiscountCodeController::class, 'create']);
 
 Route::post('authenticated/code/{discountCode:code}', [ProcessCodeForAuthenticatedUser::class, 'code']);
 

@@ -7,8 +7,10 @@ use App\Http\Helper\ValidatorHelper;
 use App\Jobs\ProcessAutoCodeCreation;
 use App\Models\DiscountCode;
 use App\Models\DiscountCodeFeatures;
+use App\Models\DiscountCodeGroups;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Artisan;
 use Illuminate\Validation\ValidationException;
 
 
@@ -127,6 +129,41 @@ class DiscountCodeController extends Controller
             return response()->json([self::BODY => null, self::MESSAGE => $e->getMessage()])->setStatusCode(417);
 
         }
+    }
+
+
+    /**
+     * @param Request $request
+     * @return JsonResponse|object
+     * @throws ValidationException
+     */
+    public function create(Request $request): JsonResponse
+    {
+        // validate code data
+        $seriesValidator = (new ValidatorHelper)->massiveCodeValidator($request->post());
+
+        if ($seriesValidator->fails()) {
+
+            return response()->json([self::BODY => null, self::MESSAGE => $seriesValidator->errors()])->setStatusCode(400);
+
+        }
+        $data = $seriesValidator->validated();
+
+        // validate Feature Array
+        $isFeatureOk = (new ValidatorHelper)->validateFeatureArray($data['features']);
+
+        if (!$isFeatureOk) {
+
+            return response()->json([self::BODY => null, self::MESSAGE => __('messages.checkDateIntervalAndPlan')])->setStatusCode(400);
+
+        }
+
+        //check if has not series at the first
+        $group = DiscountCodeGroups::query()->where('series',$data['series'])->first();
+
+        $result = (new DiscountCode)->createMassiveCode($data,$group);
+
+        return response()->json([self::BODY => $result[self::BODY], self::MESSAGE => $result[self::MESSAGE]])->setStatusCode($result[self::STATUS_CODE]);
     }
 
 }

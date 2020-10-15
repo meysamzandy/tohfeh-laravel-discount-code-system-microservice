@@ -33,16 +33,17 @@ class DiscountCode extends Model
 
     public function markets(): HasMany
     {
-        return $this->hasMany(MarketAccessLimit::class,'code_id' , 'id');
+        return $this->hasMany(MarketAccessLimit::class, 'code_id', 'id');
     }
 
     public function users(): HasMany
     {
-        return $this->hasMany(UserAccessLimit::class,'code_id' , 'id');
+        return $this->hasMany(UserAccessLimit::class, 'code_id', 'id');
     }
+
     public function usageLogs(): HasMany
     {
-        return $this->hasMany(UsageLog::class,'code_id' , 'id');
+        return $this->hasMany(UsageLog::class, 'code_id', 'id');
     }
 
     /**
@@ -51,7 +52,6 @@ class DiscountCode extends Model
      */
     public function createCode($data): ?array
     {
-
         if ($data['created_type'] === 'auto') {
             return $this->insertAutoCode($data);
         }
@@ -60,8 +60,71 @@ class DiscountCode extends Model
             return $this->insertManualCode($data);
         }
 
-        return SmallHelper::returnStatus(false, 417,null,__('messages.exceptionError'));
+        return SmallHelper::returnStatus(false, 417, null, __('messages.exceptionError'));
 
+    }
+
+
+    /**
+     * @param $data
+     * @param $group
+     * @return array
+     */
+    public function createMassiveCode($data, $group): array
+    {
+        // prepare data for auto code
+        [$groupData, $featuresData, $CodeData,$userListData, $marketData] = SmallHelper::prepareDataForMassiveCodes($data);
+
+        if ($group) {
+            $groupId = $group['id'];
+        }
+
+        DB::beginTransaction();
+        try {
+            if (!$group) {
+                //  create group
+                $newGroup = new DiscountCodeGroups($groupData);
+                $newGroup->save();
+                $groupId = $newGroup['id'];
+                //  create feature
+                (new DiscountCodeFeatures)->createFeature($featuresData, $groupId);
+            }
+
+            // get String type from config
+            $stringType = [
+                0 => config('settings.generatorString.number'),
+                1 => config('settings.generatorString.alphabetic'),
+                2 => config('settings.generatorString.bothCharacter'),
+            ];
+
+            //generate a code
+            $generateCode = SmallHelper::codeGenerator($data['prefix'], $stringType[$data['stringType']], config('settings.automateCodeLength'));
+
+            if (!$generateCode) {
+                DB::rollback();
+                return SmallHelper::returnStatus(false, 417, null, __('messages.exceptionError'));
+            }
+
+            $CodeData['group_id'] = $groupId;
+            $CodeData['code'] = $generateCode;
+            //create a code in db
+            $code = new self($CodeData);
+            $code->save();
+
+            // create market associated with code if has_market is true
+            (new MarketAccessLimit)->createMarket($CodeData['has_market'], $marketData, $code['id']);
+
+            // create user associated with code access_type is private
+            (new UserAccessLimit)->createUserAccess($CodeData['access_type'], $userListData, $code['id']);
+
+            DB::commit();
+
+            return SmallHelper::returnStatus(true, 201, ['code' => $generateCode],trans('messages.countOfCodeCreation', ['count' => 1]));
+
+        } catch (Exception $e) {
+            DB::rollback();
+            return SmallHelper::returnStatus(false, 417, null, $e->getMessage());
+        }
     }
 
     /**
@@ -117,16 +180,16 @@ class DiscountCode extends Model
                     $count++;
                 } catch (Exception $e) {
                     DB::rollback();
-                    return SmallHelper::returnStatus(false, 417,null,$e->getMessage());
+                    return SmallHelper::returnStatus(false, 417, null, $e->getMessage());
                 }
 
             }
 
-            return SmallHelper::returnStatus(true, 201,trans('messages.countOfCodeCreation', ['count' => $count]));
+            return SmallHelper::returnStatus(true, 201, trans('messages.countOfCodeCreation', ['count' => $count]));
 
         } catch (Exception $e) {
             DB::rollback();
-            return SmallHelper::returnStatus(false, 417,null,$e->getMessage());
+            return SmallHelper::returnStatus(false, 417, null, $e->getMessage());
         }
     }
 
@@ -143,7 +206,7 @@ class DiscountCode extends Model
         $isCodeExist = self::query()->where('code', $CodeData['code'])->exists();
 
         if ($isCodeExist) {
-            return SmallHelper::returnStatus(false, 417,null,__('messages.CodeExist'));
+            return SmallHelper::returnStatus(false, 417, null, __('messages.CodeExist'));
         }
 
         DB::beginTransaction();
@@ -154,7 +217,7 @@ class DiscountCode extends Model
             $group->save();
 
             //  create feature
-           (new DiscountCodeFeatures)->createFeature($featuresData, $group['id']);
+            (new DiscountCodeFeatures)->createFeature($featuresData, $group['id']);
 
             //  create code
             $CodeData['group_id'] = $group['id'];
@@ -170,11 +233,11 @@ class DiscountCode extends Model
 
             DB::commit();
 
-            return SmallHelper::returnStatus(true, 201,trans('messages.countOfCodeCreation', ['count' => 1]));
+            return SmallHelper::returnStatus(true, 201, trans('messages.countOfCodeCreation', ['count' => 1]));
 
         } catch (Exception $e) {
             DB::rollback();
-            return SmallHelper::returnStatus(false, 417,null,$e->getMessage());
+            return SmallHelper::returnStatus(false, 417, null, $e->getMessage());
         }
     }
 

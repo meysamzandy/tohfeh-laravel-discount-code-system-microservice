@@ -108,6 +108,30 @@ class SmallHelper
     }
 
     /**
+     * @param array $data
+     * @return array
+     */
+    public static function prepareDataForMassiveCodes(array $data): array
+    {
+        $groupData = [
+            'group_name' => $data['group_name'],
+            'series' => $data['series'],
+        ];
+        $featuresData = $data['features'];
+        $CodeData = [
+            'created_type' => $data['created_type'],
+            'access_type' => $data['access_type'],
+            'usage_limit' => $data['usage_limit'],
+            'usage_limit_per_user' => $data['usage_limit_per_user'],
+            'first_buy' => $data['first_buy'],
+            'has_market' => $data['has_market'],
+        ];
+        $userListData = $data['uuid_list'] ?? null;
+        $marketData = $data['market'] ?? null;
+        return array($groupData, $featuresData, $CodeData,$userListData, $marketData);
+    }
+
+    /**
      * @param bool $resultStatus
      * @param int $statusCode
      * @param null $body
