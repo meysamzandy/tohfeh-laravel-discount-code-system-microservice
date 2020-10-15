@@ -6,6 +6,8 @@ use App\Http\Helper\SmallHelper;
 use App\Models\DiscountCode;
 use App\Models\DiscountCodeFeatures;
 use App\Models\DiscountCodeGroups;
+use Exception;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 
 class DiscountCodeGroupController extends Controller
@@ -18,6 +20,10 @@ class DiscountCodeGroupController extends Controller
     protected $message;
     protected $statusCode = 400;
 
+    /**
+     * @param Request $request
+     * @return JsonResponse|object
+     */
     public function index(Request $request)
     {
         /**
@@ -37,5 +43,23 @@ class DiscountCodeGroupController extends Controller
 
         return response()->json([self::BODY => $data[self::BODY], self::MESSAGE => $data[self::MESSAGE]])->setStatusCode($data[self::STATUS_CODE]);
 
+    }
+
+    /**
+     * @param DiscountCodeGroups $id
+     * @return JsonResponse|object
+     */
+    public function destroy(DiscountCodeGroups $id)
+    {
+        try {
+
+            $id->delete();
+            return response()->json([self::BODY => null, self::MESSAGE => __('messages.deletion_successful')])->setStatusCode(204);
+
+        } catch (Exception $e) {
+
+            return response()->json([self::BODY => null, self::MESSAGE => $e->getMessage()])->setStatusCode(417);
+
+        }
     }
 }

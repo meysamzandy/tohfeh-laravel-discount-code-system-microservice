@@ -12,12 +12,16 @@ use Illuminate\Support\Facades\Route;
 //group
 Route::get('/group', [DiscountCodeGroupController::class, 'index']);
 
+Route::delete('/group/{id}', [DiscountCodeGroupController::class, 'destroy']);
+
 //code
 Route::get('/code', [DiscountCodeController::class, 'index']);
 
 Route::post('/code', [DiscountCodeController::class, 'store']);
 
 Route::put('/code/{id}', [DiscountCodeController::class, 'update']);
+
+Route::delete('/code/{id}', [DiscountCodeController::class, 'destroy']);
 
 //feature
 Route::get('/feature', [DiscountCodeFeaturesController::class, 'index']);
