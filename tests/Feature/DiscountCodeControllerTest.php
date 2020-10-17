@@ -414,7 +414,7 @@ class DiscountCodeControllerTest extends TestCase
         $this->assertDatabaseCount('discount_codes', 0);
 
 
-        // create one auto code successfully
+        // create one auto code successfully for first time in series
         $url = self::MASSIVE_CODE_URL;
         $this->withoutMiddleware();
         $data = [
@@ -474,10 +474,74 @@ class DiscountCodeControllerTest extends TestCase
             'price' => 1000,
             'description' => 'a sample text for description',
         ]);
-
         $this->assertDatabaseCount('discount_code_groups', 1);
         $this->assertDatabaseCount('discount_code_features', 1);
         $this->assertDatabaseCount('discount_codes', 1);
+
+
+        // create one auto code successfully for second time in series
+        $url = self::MASSIVE_CODE_URL;
+        $this->withoutMiddleware();
+        $data = [
+            //code group
+            'group_name' => 'autotest',
+            'series' => 'test',
+            //code property
+            'created_type' => 'auto', // if auto code should be empty
+            'creation_code_count' => 1,
+            'prefix' => 'test_',
+            'stringType' => 0,
+            'code' => '',
+            'access_type' => 'private',
+            'uuid_list' => [
+                '2d3c9de4-3831-4988-8afb-710fda2e740c'
+            ],
+            'usage_limit' => 1,
+            'usage_limit_per_user' => 1,
+            'first_buy' => false,
+            'has_market' => true,
+            'market' => [
+                [
+                    'market_name' => 'myket',
+                    'version_major' => 1,
+                    'version_minor' => 10,
+                    'version_patch' => 0,
+                ]
+            ],
+
+            // code feature property
+
+            'features' => [
+                [
+                    'plan_id' => 2222,
+                    'start_time' => date('Y-m-d H:i:s', strtotime(Carbon::today()->addDays(1))),
+                    'end_time' => date('Y-m-d H:i:s', strtotime(Carbon::today()->addDays(5))),
+                    'code_type' => 'price',
+                    'percent' => 1,
+                    'limit_percent_price' => '',
+                    'price' => 1000,
+                    'description' => 'a sample text for description',
+                ]
+
+            ]
+
+        ];
+        $response = $this->post($url, $data);
+        $responseData = json_decode($response->getContent(), true);
+        $response->assertStatus(201);
+        self::assertArrayHasKey('code', $responseData['body']);
+        $this->assertDatabaseHas('discount_code_groups', [
+            'group_name' => 'autotest',
+        ]);
+        $this->assertDatabaseHas('discount_code_features', [
+            'plan_id' => 2222,
+            'code_type' => 'price',
+            'price' => 1000,
+            'description' => 'a sample text for description',
+        ]);
+        $this->assertDatabaseCount('discount_code_groups', 1);
+        $this->assertDatabaseCount('discount_code_features', 1);
+        $this->assertDatabaseCount('discount_codes', 2);
     }
 
     public function testDestroy(): void
