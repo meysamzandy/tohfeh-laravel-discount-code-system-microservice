@@ -6,7 +6,6 @@ use App\Models\DiscountCodeFeatures;
 use App\Models\DiscountCodeGroups;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Artisan;
-use PHPUnit\Framework\Error\Error;
 use Tests\TestCase;
 
 class DiscountCodeFeaturesTest extends TestCase
@@ -565,4 +564,10 @@ class DiscountCodeFeaturesTest extends TestCase
 
     }
 
+    public function testGetParams(): void
+    {
+        $params = (new DiscountCodeFeatures)->getParams();
+        self::assertIsArray($params);
+        self::assertNotNull($params);
+    }
 }

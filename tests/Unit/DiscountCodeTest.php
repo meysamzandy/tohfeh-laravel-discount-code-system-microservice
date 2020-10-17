@@ -384,4 +384,11 @@ class DiscountCodeTest extends TestCase
         self::assertIsString($getGroup);
 
     }
+
+    public function testGetParams(): void
+    {
+        $params = (new DiscountCode)->getParams();
+        self::assertIsArray($params);
+        self::assertNotNull($params);
+    }
 }

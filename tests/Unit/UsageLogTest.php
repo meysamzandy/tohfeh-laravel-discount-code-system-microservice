@@ -48,8 +48,11 @@ class UsageLogTest extends TestCase
 
     }
 
-    protected function tearDown(): void
+    public function testGetParams(): void
     {
-        parent::tearDown();
+        $params = (new UsageLog)->getParams();
+        self::assertIsArray($params);
+        self::assertNotNull($params);
     }
+
 }
