@@ -15,6 +15,6 @@ class DiscountCodeSeeder extends Seeder
      */
     public function run(): void
     {
-        DiscountCode::factory()->create(['group_id' => DiscountCodeGroups::factory()->create()]);
+        DiscountCode::factory(2)->create(['group_id' => DiscountCodeGroups::factory()->create()]);
     }
 }
