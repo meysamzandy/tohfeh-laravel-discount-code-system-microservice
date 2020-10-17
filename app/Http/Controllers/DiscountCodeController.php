@@ -159,11 +159,36 @@ class DiscountCodeController extends Controller
         }
 
         //check if has not series at the first
-        $group = DiscountCodeGroups::query()->where('series',$data['series'])->first();
+        $group = DiscountCodeGroups::query()->where('series', $data['series'])->first();
 
-        $result = (new DiscountCode)->createMassiveCode($data,$group);
+        $result = (new DiscountCode)->createMassiveCode($data, $group);
 
         return response()->json([self::BODY => $result[self::BODY], self::MESSAGE => $result[self::MESSAGE]])->setStatusCode($result[self::STATUS_CODE]);
+    }
+
+
+    public function destroy(DiscountCode $id)
+    {
+        try {
+            // delete  code
+            $id->delete();
+            // check if there is no any code in group then delete the group and everuting releated to group
+            $codeCountsInGroup = DiscountCode::query()->where('group_id', $id->group_id)->count();
+            if ($codeCountsInGroup <= 0) {
+
+                DiscountCodeGroups::destroy($id->group_id);
+                return response()->json([self::BODY => null, self::MESSAGE => __('messages.deletion_successful')])->setStatusCode(204);
+
+            }
+
+            return response()->json([self::BODY => null, self::MESSAGE => __('messages.deletion_successful')])->setStatusCode(204);
+
+        } catch (Exception $e) {
+
+            return response()->json([self::BODY => null, self::MESSAGE => $e->getMessage()])->setStatusCode(417);
+
+        }
+
     }
 
 }

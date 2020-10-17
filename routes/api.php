@@ -21,7 +21,7 @@ use Illuminate\Support\Facades\Route;
 
 
 
-Route::post('create/code', [DiscountCodeController::class, 'create']);
+Route::post('create/code', [DiscountCodeController::class, 'create'])->middleware(['massiveToken']);
 
 Route::post('authenticated/code/{discountCode:code}', [ProcessCodeForAuthenticatedUser::class, 'code']);
 

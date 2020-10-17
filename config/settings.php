@@ -8,6 +8,12 @@ return [
         'password' => 'aiq64^frt5pved5^e#%9e3'
     ],
 
+    // token for admin APIs
+    'massive_jwt' =>[
+        'key' => 'rTiqowY*bMGvghD9BF8MfhYwKj5g#D*JtC',
+        'password' => 'XMPtdiN6m8xkrFCkqfn7'
+    ],
+
     // token for client APIs
     'client_jwt' =>[
         'key' => 'ujbnjeccb#*apzbxkwj&t%786!&b3hw7q%',

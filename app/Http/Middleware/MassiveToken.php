@@ -6,7 +6,7 @@ use App\Http\Helper\JwtHelper;
 use Closure;
 use Illuminate\Http\Request;
 
-class AdminToken
+class MassiveToken
 {
     /**
      * Handle an incoming request.
@@ -18,13 +18,13 @@ class AdminToken
     public function handle(Request $request, Closure $next)
     {
 //        $data = [
-//            'password' => config('settings.admin_jwt.password')
+//            'password' => config('settings.massive_jwt.password')
 //        ];
-//        $jwt = JwtHelper::encodeJwt(config('settings.admin_jwt.key'),$data, 360000) ;
+//        $jwt = JwtHelper::encodeJwt(config('settings.massive_jwt.key'),$data, 360000) ;
 //        dd($jwt);
-        $password = config('settings.admin_jwt.password');
+        $password = config('settings.massive_jwt.password');
 
-        $token = JwtHelper::decodeJwt(config('settings.admin_jwt.key'), $request->header('token'));
+        $token = JwtHelper::decodeJwt(config('settings.massive_jwt.key'), $request->header('token'));
         if (!$request->header('token')) {
             return response()->json([__('messages.tokenIsNotValid')])->setStatusCode(403);
         }
