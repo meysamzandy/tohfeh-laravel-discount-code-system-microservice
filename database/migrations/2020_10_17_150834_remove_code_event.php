@@ -26,6 +26,6 @@ class RemoveCodeEvent extends Migration
      */
     public function down()
     {
-        //
+        DB::unprepared('DROP EVENT IF EXISTS code_remove');
     }
 }

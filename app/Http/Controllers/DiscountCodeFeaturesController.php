@@ -88,7 +88,7 @@ class DiscountCodeFeaturesController extends Controller
      * @param $id
      * @return JsonResponse|object
      */
-    public function destroy($id)
+    public function destroy(DiscountCodeFeatures $id)
     {
         /**
          * @delete('/api/admin/feature/{id}')
@@ -98,25 +98,10 @@ class DiscountCodeFeaturesController extends Controller
         //
         try {
 
-            $feature = DiscountCodeFeatures::query()->find((int)$id);
-            if (!$feature) {
-                return response()->json([self::BODY => null, self::MESSAGE => __('messages.feature_not_exit')])->setStatusCode(404);
-            }
-
             // delete feature
-            $deleteResult = $feature->delete();
-            if (!$deleteResult) {
-                return response()->json([self::BODY => null, self::MESSAGE => __('messages.deletion_failed')])->setStatusCode(417);
-            }
+            $id->delete();
 
-            // delete group and code and all stuff related to the group and code if there is no any feature in the group
-            $count = DiscountCodeFeatures::query()->where('group_id', $feature->group_id)->count();
-            if ($count === 0) {
-                DiscountCodeGroups::destroy($feature->group_id);
-                return response()->json([self::BODY => null, self::MESSAGE => __('messages.deletion_successful')])->setStatusCode(204);
-            }
-
-            return response()->json([self::BODY => null, self::MESSAGE => __('messages.delete_full_successful')])->setStatusCode(204);
+            return response()->json([self::BODY => null, self::MESSAGE => __('messages.deletion_failed')])->setStatusCode(204);
 
         } catch (Exception $e) {
 
