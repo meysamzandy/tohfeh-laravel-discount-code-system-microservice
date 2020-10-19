@@ -75,13 +75,15 @@ class ProcessCodeForAuthenticatedUserTest extends TestCase
         ];
         $jwt = JwtHelper::encodeJwt(config('settings.user_management_jwt.key'), $tokenData, 36000);
         $data = [
-            'user_token' => $jwt,
             'market' => [
                 "name" => "caffebazar",
                 "version" => "1.0.5"
             ]
         ];
-        $response = $this->post($url, $data);
+        $header = [
+            'Authorization' => 'Bearer ' . $jwt,
+        ];
+        $response = $this->post($url, $data,$header);
         $responseData = json_decode($response->getContent(), true);
         self::assertEquals(200, $response->status());
         self::assertFalse($responseData['body']['first_by']);
@@ -100,13 +102,15 @@ class ProcessCodeForAuthenticatedUserTest extends TestCase
         ];
         $jwt = JwtHelper::encodeJwt(config('settings.user_management_jwt.key'), $tokenData, 36000);
         $data = [
-            'user_token' => $jwt,
             'market' => [
                 "name" => "caffebazar",
                 "version" => "1.0.5"
             ]
         ];
-        $response = $this->post($url, $data);
+        $header = [
+            'Authorization' => 'Bearer ' . $jwt,
+        ];
+        $response = $this->post($url, $data,$header);
         $responseData = json_decode($response->getContent(), true);
         self::assertEquals(403, $response->status());
         self::assertEquals('سقف مجاز استفاده از این کد به پایان رسیده است.', $responseData['message']);
@@ -162,13 +166,15 @@ class ProcessCodeForAuthenticatedUserTest extends TestCase
         ];
         $jwt = JwtHelper::encodeJwt(config('settings.user_management_jwt.key'), $tokenData, 36000);
         $data = [
-            'user_token' => $jwt,
             'market' => [
                 "name" => "caffebazar",
                 "version" => "1.0.5"
             ]
         ];
-        $response = $this->post($url, $data);
+        $header = [
+            'Authorization' => 'Bearer ' . $jwt,
+        ];
+        $response = $this->post($url, $data,$header);
         $responseData = json_decode($response->getContent(), true);
         self::assertEquals(403, $response->status());
         self::assertEquals('استفاده از این کد، بر روی اپلیکیشنی که از آن استفاده میکنید، مجاز نیست.', $responseData['message']);
@@ -220,13 +226,15 @@ class ProcessCodeForAuthenticatedUserTest extends TestCase
         ];
         $jwt = JwtHelper::encodeJwt(config('settings.user_management_jwt.key'), $tokenData, 36000);
         $data = [
-            'user_token' => $jwt,
             'market' => [
                 "name" => "caffebazar",
                 "version" => "1.0.5"
             ]
         ];
-        $response = $this->post($url, $data);
+        $header = [
+            'Authorization' => 'Bearer ' . $jwt,
+        ];
+        $response = $this->post($url, $data,$header);
         $responseData = json_decode($response->getContent(), true);
         self::assertEquals(403, $response->status());
         self::assertEquals('اجازه استفاده از این کد برای شما صادر نشده است.', $responseData['message']);
@@ -243,13 +251,15 @@ class ProcessCodeForAuthenticatedUserTest extends TestCase
         ];
         $jwt = JwtHelper::encodeJwt(config('settings.user_management_jwt.key'), $tokenData, 36000);
         $data = [
-            'user_token' => $jwt,
             'market' => [
                 "name" => "caffebazar",
                 "version" => "1.0.5"
             ]
         ];
-        $response = $this->post($url, $data);
+        $header = [
+            'Authorization' => 'Bearer ' . $jwt,
+        ];
+        $response = $this->post($url, $data,$header);
         $responseData = json_decode($response->getContent(), true);
         self::assertEquals(403, $response->status());
 
@@ -258,7 +268,6 @@ class ProcessCodeForAuthenticatedUserTest extends TestCase
         // process manual public with has market false code
         $url = self::PROCESS_CODE_URL . 'CODE_TEST_52';
         $data = [
-            'useddr_token' => 'ddddd',
             'market' => [
                 "name" => "caffebazar",
                 "version" => "1.0.5"
@@ -272,7 +281,6 @@ class ProcessCodeForAuthenticatedUserTest extends TestCase
         // process manual public with has market false code
         $url = self::PROCESS_CODE_URL . 'CODE_TEST_52';
         $data = [
-            'user_token' => 'ddssddd',
             'mdarket' => [
                 "nadme" => "caffebazar",
                 "vedsion" => "1.0.5"
@@ -332,27 +340,43 @@ class ProcessCodeForAuthenticatedUserTest extends TestCase
         $jwt = JwtHelper::encodeJwt(config('settings.user_management_jwt.key'), $data, 36000);
 
         $data1 = [
-            'user_token' => $jwt,
             'market' => [
                 "name" => "caffebazar",
                 "version" => "1.0.5"
             ]
         ];
-        $response = $this->post($url, $data1);
+        $header = [
+            'Authorization' => 'Bearer ' . $jwt,
+        ];
+        $response = $this->post($url, $data1,$header);
         $responseData = json_decode($response->getContent(), true);
         self::assertEquals(403, $response->status());
         self::assertEquals('سقف مجاز استفاده از این کد برای شما به پایان رسیده است.', $responseData['message']);
         
         $data1 = [
-            'user_token' => 'ddddddd',
             'market' => [
                 "name" => "caffebazar",
                 "version" => "1.0.5"
             ]
         ];
-        $response = $this->post($url, $data1);
+        $header = [
+            'Authorization' => 'Bearer ' . 'ddddd',
+        ];
+        $response = $this->post($url, $data1,$header);
         $responseData = json_decode($response->getContent(), true);
         self::assertEquals(403, $response->status());
         self::assertEquals('Wrong number of segments', $responseData['message']);
+
+        $data1 = [
+            'market' => [
+                "name" => "",
+                "version" => ""
+            ]
+        ];
+        $header = [
+            'Authorization' => 'Bearer ' . 'ddddd',
+        ];
+        $response = $this->post($url, $data1,$header);
+        self::assertEquals(400, $response->status());
     }
 }

@@ -13,7 +13,7 @@ class DiscountCodeTest extends TestCase
     public function setUp(): void
     {
         parent::setUp();
-        Artisan::call('migrate');
+        Artisan::call('migrate:refresh');
     }
 
     public function testInsertManualCode(): void
@@ -78,7 +78,7 @@ class DiscountCodeTest extends TestCase
             'plan_id' => 1212,
             'code_type' => 'price',
             'percent' => 1,
-            'limit_percent_price' => '',
+            'limit_percent_price' => null,
             'price' => 1000,
             'description' => 'a sample text for description',
         ]);

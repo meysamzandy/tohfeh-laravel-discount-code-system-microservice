@@ -229,7 +229,7 @@ class DiscountCodeControllerTest extends TestCase
     public function testUpdate(): void
     {
         Artisan::call('migrate:refresh --seed --seeder=DiscountCodeSeeder');
-        $getOneCode = DiscountCode::find(1);
+        $getOneCode = DiscountCode::all()[0];
         // check if wrong url
         $url = self::CODE_URL;
         $response = $this->put($url);
@@ -250,15 +250,6 @@ class DiscountCodeControllerTest extends TestCase
         $responseData = json_decode($response->getContent(), true);
         $response->assertStatus(400);
 
-        // check if id doesn't exist
-        $url = self::CODE_URL . '/' . 3000;
-        $this->withoutMiddleware();
-        $data = [
-            'usage_limit' => 22,
-        ];
-        $response = $this->put($url, $data);
-        $responseData = json_decode($response->getContent(), true);
-        $response->assertStatus(404);
 
         //   put data correctly
         $url = self::CODE_URL . '/' . $getOneCode->id;

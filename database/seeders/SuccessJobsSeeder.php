@@ -2,9 +2,10 @@
 
 namespace Database\Seeders;
 
+use App\Models\SuccessJobs;
 use Illuminate\Database\Seeder;
 
-class SuccessJobs extends Seeder
+class SuccessJobsSeeder extends Seeder
 {
     /**
      * Run the database seeds.
@@ -13,6 +14,6 @@ class SuccessJobs extends Seeder
      */
     public function run()
     {
-        //
+        SuccessJobs::factory()->create();
     }
 }

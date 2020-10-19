@@ -14,7 +14,7 @@ class RemoveFeatureEvent extends Migration
      */
     public function up(): void
     {
-        DB::unprepared('CREATE EVENT `feature_remove` ON SCHEDULE EVERY 1 DAY STARTS "2020-10-17 03:00:00.000000" ON COMPLETION NOT PRESERVE ENABLE DO 
+        DB::unprepared('CREATE EVENT `feature_remove` ON SCHEDULE EVERY 1 DAY STARTS "2020-10-17 03:00:00.000000" ON COMPLETION NOT PRESERVE ENABLE DO
         DELETE from discount_code_features where discount_code_features.end_time < NOW() - INTERVAL 30 DAY'
         );
 

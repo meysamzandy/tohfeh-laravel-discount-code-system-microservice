@@ -35,8 +35,8 @@ class DiscountCodeFeaturesControllerTest extends TestCase
         $response = $this->delete($url);
         $response->assertStatus(403);
 
-        // check if id doesn't exist
-        $url = self::FEATURE_URL . '/' . 3000;
+        // check if code doesn't exist
+        $url = self::FEATURE_URL . '/' . 1111;
         $this->withoutMiddleware();
         $response = $this->delete($url);
         $response->assertStatus(404);
@@ -62,8 +62,7 @@ class DiscountCodeFeaturesControllerTest extends TestCase
         $this->withoutMiddleware();
         $response = $this->delete($url);
         $response->assertStatus(204);
-        // group should be deleted
-        $this->assertDatabaseCount('discount_code_groups', 0);
+
         // features should be deleted
         $this->assertDatabaseCount('discount_code_features', 0);
         $this->assertDatabaseMissing('discount_code_features', ['id' => $feature[1]->id]);

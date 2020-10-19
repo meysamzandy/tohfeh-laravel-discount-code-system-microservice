@@ -89,7 +89,7 @@ class DiscountCodeFeaturesController extends Controller
      * @param $id
      * @return JsonResponse|object
      */
-    public function destroy(DiscountCodeFeatures $id)
+    public function destroy($id)
     {
         /**
          * @delete('/api/admin/feature/{id}')
@@ -100,7 +100,11 @@ class DiscountCodeFeaturesController extends Controller
         try {
 
             // delete feature
-            $id->delete();
+            $discountCodeFeatures = DiscountCodeFeatures::find((int)$id);
+            if (!$discountCodeFeatures) {
+                return response()->json([self::BODY => null, self::MESSAGE => __('messages.codeNotExist')])->setStatusCode(404);
+            }
+            $discountCodeFeatures->delete();
 
             return response()->json([self::BODY => null, self::MESSAGE => __('messages.deletion_failed')])->setStatusCode(204);
 
