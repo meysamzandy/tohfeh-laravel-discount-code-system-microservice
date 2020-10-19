@@ -101,7 +101,7 @@ class DiscountCodeController extends Controller
      * @param $id
      * @return JsonResponse
      */
-    public function update(Request $request, $id): JsonResponse
+    public function update(Request $request, DiscountCode $id): JsonResponse
     {
 
         // validate code data
@@ -115,11 +115,8 @@ class DiscountCodeController extends Controller
 
 
         try {
-            $discountCode = DiscountCode::find((int)$id);
-            if (!$discountCode) {
-                return response()->json([self::BODY => null, self::MESSAGE => __('messages.codeNotExist')])->setStatusCode(404);
-            }
-            $discountCode->update([
+
+            $id->update([
                 'usage_limit' => $validator->validated()['usage_limit']
             ]);
 

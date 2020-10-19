@@ -3,6 +3,7 @@
 return [
 
     'tokenIsNotValid' =>'token نا معتبر است',
+    'tokenIsNotNotExist' =>'token نا معتبر است',
     'throttle' => 'ارسال بیش از اندازه درخواست. لطفا تا :seconds ثانیه دیگر صبر کنید.',
     'max' => 'ویژگی :attribute با مقدار :input بایستی کوچکتر از :max باشد.',
     'min' => 'ویژگی :attribute با مقدار :input بایستی بزرگتر از :min باشد. ',

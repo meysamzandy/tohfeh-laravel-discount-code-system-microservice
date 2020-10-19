@@ -29,10 +29,9 @@ class ProcessCodeForAuthenticatedUser extends Controller
 
 
 
-        // validate user Token data
-        $validator = (new ValidatorHelper)->userTokenValidator($request->post());
-        if ($validator->fails()) {
-            return response()->json([self::BODY => null, self::MESSAGE => $validator->errors()])->setStatusCode(400);
+        if (!$request->bearerToken()) {
+            return response()->json([self::BODY => null, self::MESSAGE => __('messages.tokenIsNotNotExist
+            ')])->setStatusCode(400);
         }
         // validate market data
         $validator = (new ValidatorHelper)->marketValidator($request->post());
@@ -40,7 +39,7 @@ class ProcessCodeForAuthenticatedUser extends Controller
             return response()->json([self::BODY => null, self::MESSAGE => $validator->errors()])->setStatusCode(400);
         }
 
-        $tokenData = JwtHelper::decodeJwt(config('settings.user_management_jwt.key'), $request->input('user_token'));
+        $tokenData = JwtHelper::decodeJwt(config('settings.user_management_jwt.key'), $request->bearerToken());
         // check if token is invalid
         if (!$tokenData['result_status']) {
             return response()->json([self::BODY => null, self::MESSAGE => $tokenData['result']])->setStatusCode(403);
