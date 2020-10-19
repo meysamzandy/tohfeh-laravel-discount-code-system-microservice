@@ -204,7 +204,6 @@ class DiscountCode extends Model
 
         // check if code not exist in db
         $isCodeExist = self::query()->where('code', $CodeData['code'])->exists();
-
         if ($isCodeExist) {
             return SmallHelper::returnStatus(false, 417, null, __('messages.CodeExist'));
         }

@@ -51,7 +51,7 @@ class DiscountCodeTest extends TestCase
                     'end_time' => date('Y-m-d H:i:s', strtotime(Carbon::today()->addDays(5))),
                     'code_type' => 'price',
                     'percent' => 1,
-                    'limit_percent_price' => '',
+                    'limit_percent_price' => null,
                     'price' => 1000,
                     'description' => 'a sample text for description',
                 ]

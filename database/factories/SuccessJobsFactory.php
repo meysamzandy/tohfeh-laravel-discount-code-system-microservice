@@ -23,6 +23,10 @@ class SuccessJobsFactory extends Factory
     public function definition()
     {
         return [
+            'resultStats' => $this->faker->boolean,
+            'body' => $this->faker->words(5),
+            'message' => $this->faker->words(5),
+            'statusCode' => 201,
         ];
     }
 }
