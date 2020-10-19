@@ -54,18 +54,17 @@ class DiscountCodeFeatures extends Model
      */
     public function checkFeatureBeforeAddToExistingCode(int $group_id, array $features): bool
     {
+
         $smallHelper = new SmallHelper();
         $existingFeatures = self::query()->where('group_id', $group_id)->get()->all();
-        $count = count($existingFeatures);
-        $checkinArray = $existingFeatures;
-        for ($i = 0; $i < $count; $i++) {
-            foreach ($checkinArray as $key => $value) {
-                $IntervalStart_timeStatus = $smallHelper->checkDateInterval($features[$i]['start_time'], $value['start_time'], $value['end_time']);
-                $IntervalEnd_timeStatus = $smallHelper->checkDateInterval($features[$i]['end_time'], $value['start_time'], $value['end_time']);
-                if (((int)$features[$i]['plan_id'] === (int)$value['plan_id']) && $IntervalStart_timeStatus) {
+        foreach ($existingFeatures as $value) {
+            foreach ($features as $item) {
+                $IntervalStart_timeStatus = $smallHelper->checkDateInterval($item['start_time'], $value['start_time'], $value['end_time']);
+                $IntervalEnd_timeStatus = $smallHelper->checkDateInterval($item['end_time'], $value['start_time'], $value['end_time']);
+                if (((int)$item['plan_id'] === (int)$value['plan_id']) && $IntervalStart_timeStatus) {
                     return false;
                 }
-                if (((int)$features[$i]['plan_id'] === (int)$value['plan_id']) && $IntervalEnd_timeStatus) {
+                if (((int)$item['plan_id'] === (int)$value['plan_id']) && $IntervalEnd_timeStatus) {
                     return false;
                 }
             }

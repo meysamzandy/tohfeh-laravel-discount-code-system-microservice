@@ -72,6 +72,7 @@ class DiscountCodeFeaturesController extends Controller
             return response()->json([self::BODY => null, self::MESSAGE => $validator->errors()])->setStatusCode(400);
 
         }
+
         // check if exist common feature in db
         $checkFeature = (new DiscountCodeFeatures)->checkFeatureBeforeAddToExistingCode($validator->validated()['group_id'], $validator->validated()['features']);
         if (!$checkFeature) {
