@@ -14,9 +14,9 @@ class RemoveCodeEvent extends Migration
      */
     public function up(): void
     {
-//        DB::unprepared('CREATE EVENT `code_remove` ON SCHEDULE EVERY 1 DAY STARTS "2020-10-17 03:00:00.000000" ON COMPLETION NOT PRESERVE ENABLE DO
-//             DELETE from discount_codes where discount_codes.cancel_date IS NOT NULL AND discount_codes.cancel_date < NOW() - INTERVAL 30 DAY'
-//        );
+        DB::unprepared('CREATE EVENT `code_remove` ON SCHEDULE EVERY 1 DAY STARTS "2020-10-17 03:00:00.000000" ON COMPLETION NOT PRESERVE ENABLE DO
+             DELETE from discount_codes where discount_codes.cancel_date IS NOT NULL AND discount_codes.cancel_date < NOW() - INTERVAL 30 DAY'
+        );
     }
 
     /**
@@ -26,6 +26,6 @@ class RemoveCodeEvent extends Migration
      */
     public function down()
     {
-//        DB::unprepared('DROP EVENT IF EXISTS code_remove');
+        DB::unprepared('DROP EVENT IF EXISTS code_remove');
     }
 }

@@ -14,15 +14,15 @@ class TriggerOnDeleteCode extends Migration
      */
     public function up(): void
     {
-//        DB::unprepared('
-//        CREATE TRIGGER group_check_on_delete_code AFTER DELETE ON `discount_codes` FOR EACH ROW
-//            BEGIN
-//                SET @COUNT=(SELECT COUNT(id) FROM discount_codes WHERE group_id=OLD.group_id);
-//                IF @COUNT = 0 THEN
-//                DELETE from discount_code_groups WHERE id=OLD.group_id;
-//                END IF;
-//            END
-//        ');
+        DB::unprepared('
+        CREATE TRIGGER group_check_on_delete_code AFTER DELETE ON `discount_codes` FOR EACH ROW
+            BEGIN
+                SET @COUNT=(SELECT COUNT(id) FROM discount_codes WHERE group_id=OLD.group_id);
+                IF @COUNT = 0 THEN
+                DELETE from discount_code_groups WHERE id=OLD.group_id;
+                END IF;
+            END
+        ');
     }
 
     /**
@@ -32,6 +32,6 @@ class TriggerOnDeleteCode extends Migration
      */
     public function down(): void
     {
-//        DB::unprepared('DROP EVENT IF EXISTS group_check_on_delete_feature');
+        DB::unprepared('DROP EVENT IF EXISTS group_check_on_delete_feature');
     }
 }
