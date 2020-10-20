@@ -8,6 +8,7 @@ use App\Jobs\ProcessAutoCodeCreation;
 use App\Models\DiscountCode;
 use App\Models\DiscountCodeFeatures;
 use App\Models\DiscountCodeGroups;
+use Exception;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Artisan;
@@ -172,14 +173,6 @@ class DiscountCodeController extends Controller
         try {
             // delete  code
             $id->delete();
-            // check if there is no any code in group then delete the group and everuting releated to group
-            $codeCountsInGroup = DiscountCode::query()->where('group_id', $id->group_id)->count();
-            if ($codeCountsInGroup <= 0) {
-
-                DiscountCodeGroups::destroy($id->group_id);
-                return response()->json([self::BODY => null, self::MESSAGE => __('messages.deletion_successful')])->setStatusCode(204);
-
-            }
 
             return response()->json([self::BODY => null, self::MESSAGE => __('messages.deletion_successful')])->setStatusCode(204);
 

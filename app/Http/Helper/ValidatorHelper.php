@@ -150,18 +150,6 @@ class ValidatorHelper
         ]);
     }
 
-    /**
-     * @param $data
-     * @return \Illuminate\Contracts\Validation\Validator
-     */
-    public function userTokenValidator($data): \Illuminate\Contracts\Validation\Validator
-    {
-        return Validator::make($data, [
-            'user_token' => 'required',
-        ], [
-            'required' => __('messages.required'),
-        ]);
-    }
 
     /**
      * @param $data

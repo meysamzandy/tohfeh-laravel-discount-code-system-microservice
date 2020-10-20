@@ -578,26 +578,6 @@ class DiscountCodeControllerTest extends TestCase
         $response->assertStatus(204);
 
 
-        // delete last code correctly and delete group
-        $url = self::CODE_URL . '/' . $getCodes[1]['id'];
-        $data = [
-            'password' => config('settings.admin_jwt.password')
-        ];
-        $jwt = JwtHelper::encodeJwt(config('settings.admin_jwt.key'), $data, 360000);
-
-        $response = $this->delete($url, [], ['token' => $jwt]);
-        self::assertEquals(1, $getCodes[0]['id']);
-        $this->assertDatabaseMissing('discount_codes', [
-            'id' => $getCodes[1]['id']
-        ]);
-        $this->assertDatabaseMissing('discount_code_groups', [
-            'id' => $getCodes[1]['group_id']
-        ]);
-        $response->assertStatus(204);
-
-
-
-        
     }
 
 }
