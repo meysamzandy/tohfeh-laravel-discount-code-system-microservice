@@ -43,7 +43,7 @@ class DiscountCodeController extends Controller
         [$page, $limit] = SmallHelper::paginationParams($request);
         // get query params
         [$orderColumn, $orderBy] = SmallHelper::orderParams($request);
-        $requestParams = (new DiscountCodeFeatures())->getParams();
+        $requestParams = (new DiscountCode())->getParams();
         $query = DiscountCode::query();
 
         $data = SmallHelper::fetchList($requestParams, $query, $request, $page, $limit, $orderColumn, $orderBy);
