@@ -185,7 +185,7 @@ class DiscountCode extends Model
 
             }
 
-            return SmallHelper::returnStatus(true, 201, trans('messages.countOfCodeCreation', ['count' => $count]));
+            return SmallHelper::returnStatus(true, 201, trans('messages.countOfCodeCreation', ['count' => $count,'group_name'=>$groupData['group_name']]));
 
         } catch (Exception $e) {
             DB::rollback();
