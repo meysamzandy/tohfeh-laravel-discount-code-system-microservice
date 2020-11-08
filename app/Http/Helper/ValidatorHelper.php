@@ -4,6 +4,7 @@
 namespace App\Http\Helper;
 
 
+use Carbon\Carbon;
 use Illuminate\Support\Facades\Validator;
 
 class ValidatorHelper
@@ -38,7 +39,7 @@ class ValidatorHelper
                 'market.*.version_patch' => 'exclude_if:has_market,false|required|numeric|min:0|max:999',
                 'features' => 'required|array|min:1|max:50',
                 'features.*.plan_id' => 'required|numeric',
-                'features.*.start_time' => 'required|date|after_or_equal:now',
+                'features.*.start_time' => 'required|date|after_or_equal:'. Carbon::today()->subHour().'',
                 'features.*.end_time' => 'required|date|after:features.*.start_time',
                 'features.*.code_type' => 'required|in:percent,price,free',
                 'features.*.percent' => 'exclude_unless:features.*.code_type,percent|required|numeric|min:1|max:100',
@@ -74,7 +75,7 @@ class ValidatorHelper
                 'group_id' => 'required|numeric|min:1|exists:discount_code_groups,id',
                 'features' => 'required|array|min:1|max:50',
                 'features.*.plan_id' => 'required|numeric',
-                'features.*.start_time' => 'required|date|after_or_equal:now',
+                'features.*.start_time' => 'required|date|after_or_equal:'. Carbon::today()->subHour().'',
                 'features.*.end_time' => 'required|date|after:features.*.start_time',
                 'features.*.code_type' => 'required|in:percent,price,free',
                 'features.*.percent' => 'exclude_unless:features.*.code_type,percent|required|numeric|min:1|max:100',
@@ -178,7 +179,7 @@ class ValidatorHelper
             'market.*.version_patch' => 'exclude_if:has_market,false|required|numeric|min:0|max:999',
             'features' => 'required|array|min:1|max:50',
             'features.*.plan_id' => 'required|numeric',
-            'features.*.start_time' => 'required|date|after_or_equal:now',
+            'features.*.start_time' => 'required|date|after_or_equal:'. Carbon::today()->subHour().'',
             'features.*.end_time' => 'required|date|after:features.*.start_time',
             'features.*.code_type' => 'required|in:percent,price,free',
             'features.*.percent' => 'exclude_unless:features.*.code_type,percent|required|numeric|min:1|max:100',
