@@ -42,7 +42,7 @@ class ValidatorHelper
                 'features.*.end_time' => 'required|date|after:features.*.start_time',
                 'features.*.code_type' => 'required|in:percent,price,free',
                 'features.*.percent' => 'exclude_unless:features.*.code_type,percent|required|numeric|min:1|max:100',
-                'features.*.limit_percent_price' => 'exclude_unless:features.*.code_type,percent|nullable|numeric|min:1|max:100',
+                'features.*.limit_percent_price' => 'exclude_unless:features.*.code_type,percent|nullable|numeric|min:1',
                 'features.*.price' => 'exclude_unless:features.*.code_type,price|required|numeric|min:1',
                 'features.*.description' => 'nullable|string|min:1|max:254',
 
@@ -78,7 +78,7 @@ class ValidatorHelper
                 'features.*.end_time' => 'required|date|after:features.*.start_time',
                 'features.*.code_type' => 'required|in:percent,price,free',
                 'features.*.percent' => 'exclude_unless:features.*.code_type,percent|required|numeric|min:1|max:100',
-                'features.*.limit_percent_price' => 'exclude_unless:features.*.code_type,percent|nullable|numeric|min:1|max:100',
+                'features.*.limit_percent_price' => 'exclude_unless:features.*.code_type,percent|nullable|numeric|min:1',
                 'features.*.price' => 'exclude_unless:features.*.code_type,price|required|numeric|min:1',
                 'features.*.description' => 'nullable|string|min:1|max:254',
 
@@ -182,7 +182,7 @@ class ValidatorHelper
             'features.*.end_time' => 'required|date|after:features.*.start_time',
             'features.*.code_type' => 'required|in:percent,price,free',
             'features.*.percent' => 'exclude_unless:features.*.code_type,percent|required|numeric|min:1|max:100',
-            'features.*.limit_percent_price' => 'exclude_unless:features.*.code_type,percent|nullable|numeric|min:1|max:100',
+            'features.*.limit_percent_price' => 'exclude_unless:features.*.code_type,percent|nullable|numeric|min:1',
             'features.*.price' => 'exclude_unless:features.*.code_type,price|required|numeric|min:1',
             'features.*.description' => 'nullable|string|min:1|max:254',
         ],

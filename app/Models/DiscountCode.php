@@ -232,7 +232,7 @@ class DiscountCode extends Model
 
             DB::commit();
 
-            return SmallHelper::returnStatus(true, 201, trans('messages.countOfCodeCreation', ['count' => 1]));
+            return SmallHelper::returnStatus(true, 201, trans('messages.countOfCodeCreation', ['count' => 1,'group_name'=>$groupData['group_name']]));
 
         } catch (Exception $e) {
             DB::rollback();
