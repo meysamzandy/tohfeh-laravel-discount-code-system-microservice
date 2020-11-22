@@ -15,7 +15,7 @@ class DiscountCodeFeatures extends Model
     use HasFactory;
 
     protected $fillable = [
-        'group_id', 'plan_id', 'start_time', 'end_time', 'code_type', 'percent', 'limit_percent_price', 'price', 'description'
+        'group_id', 'plan_id', 'product_id' , 'start_time', 'end_time', 'code_type', 'percent', 'limit_percent_price', 'price', 'description'
     ];
 
     /**
@@ -61,11 +61,25 @@ class DiscountCodeFeatures extends Model
             foreach ($features as $item) {
                 $IntervalStart_timeStatus = $smallHelper->checkDateInterval($item['start_time'], $value['start_time'], $value['end_time']);
                 $IntervalEnd_timeStatus = $smallHelper->checkDateInterval($item['end_time'], $value['start_time'], $value['end_time']);
-                if (((int)$item['plan_id'] === (int)$value['plan_id']) && $IntervalStart_timeStatus) {
-                    return false;
+
+                if (array_key_exists("product_id", $item)) {
+
+                    if (((int)$item['product_id'] === (int)$value['product_id']) && $IntervalStart_timeStatus) {
+                        return false;
+                    }
+                    if (((int)$item['product_id'] === (int)$value['product_id']) && $IntervalEnd_timeStatus) {
+                        return false;
+                    }
                 }
-                if (((int)$item['plan_id'] === (int)$value['plan_id']) && $IntervalEnd_timeStatus) {
-                    return false;
+
+                if (array_key_exists("plan_id", $item)) {
+
+                    if (((int)$item['plan_id'] === (int)$value['plan_id']) && $IntervalStart_timeStatus) {
+                        return false;
+                    }
+                    if (((int)$item['plan_id'] === (int)$value['plan_id']) && $IntervalEnd_timeStatus) {
+                        return false;
+                    }
                 }
             }
         }
@@ -116,53 +130,104 @@ class DiscountCodeFeatures extends Model
         foreach ($features as $feature) {
             // if feature doesn't start yet
             if (now() < $feature['start_time']) {
-                $discountData [$feature['plan_id']][] = [
-                    'feature_status' => false,
-                    'plan_id' => $feature['plan_id'],
-                    'message' => __('messages.left_to_start')
-                ];
+                if ($feature['plan_id']) {
+                    $discountData [$feature['plan_id']][] = [
+                        'feature_status' => false,
+                        'plan_id' => $feature['plan_id'],
+                        'message' => __('messages.left_to_start')
+                    ];
+                }
+                if ($feature['product_id']) {
+                    $discountData [$feature['product_id']][] = [
+                        'feature_status' => false,
+                        'product_id' => $feature['product_id'],
+                        'message' => __('messages.left_to_start')
+                    ];
+                }
                 continue;
             }
             // if feature expired
             if (now() > $feature['end_time']) {
-                $discountData [$feature['plan_id']][] = [
-                    'feature_status' => false,
-                    'plan_id' => $feature['plan_id'],
-                    'message' => __('messages.past_from_end')
-                ];
+                if ($feature['plan_id']) {
+                    $discountData [$feature['plan_id']][] = [
+                        'feature_status' => false,
+                        'plan_id' => $feature['plan_id'],
+                        'message' => __('messages.past_from_end')
+                    ];
+                }
+                if ($feature['product_id']) {
+                    $discountData [$feature['product_id']][] = [
+                        'feature_status' => false,
+                        'product_id' => $feature['product_id'],
+                        'message' => __('messages.past_from_end')
+                    ];
+                }
                 continue;
             }
             // if feature type is percent
             if ($feature['code_type'] === 'percent') {
-                $discountData [$feature['plan_id']][] = [
-                    'feature_status' => true,
-                    'type' => $feature['code_type'],
-                    'plan_id' => $feature['plan_id'],
-                    'percent' => $feature['percent'],
-                    'limit_price' => $feature['limit_percent_price'],
-                    'description' => $feature['description'],
-                ];
+                if ($feature['plan_id']) {
+                    $discountData [$feature['plan_id']][] = [
+                        'feature_status' => true,
+                        'type' => $feature['code_type'],
+                        'plan_id' => $feature['plan_id'],
+                        'percent' => $feature['percent'],
+                        'limit_price' => $feature['limit_percent_price'],
+                        'description' => $feature['description'],
+                    ];
+                }
+                if ($feature['product_id']) {
+                    $discountData [$feature['product_id']][] = [
+                        'feature_status' => true,
+                        'type' => $feature['code_type'],
+                        'product_id' => $feature['product_id'],
+                        'percent' => $feature['percent'],
+                        'limit_price' => $feature['limit_percent_price'],
+                        'description' => $feature['description'],
+                    ];
+                }
                 continue;
             }
             // if feature type is price
             if ($feature['code_type'] === 'price') {
-                $discountData [$feature['plan_id']][] = [
-                    'feature_status' => true,
-                    'type' => $feature['code_type'],
-                    'plan_id' => $feature['plan_id'],
-                    'price' => $feature['price'],
-                    'description' => $feature['description'],
-                ];
+                if ($feature['plan_id']) {
+                    $discountData [$feature['plan_id']][] = [
+                        'feature_status' => true,
+                        'type' => $feature['code_type'],
+                        'plan_id' => $feature['plan_id'],
+                        'price' => $feature['price'],
+                        'description' => $feature['description'],
+                    ];
+                }
+                if ($feature['product_id']) {
+                    $discountData [$feature['product_id']][] = [
+                        'feature_status' => true,
+                        'type' => $feature['code_type'],
+                        'product_id' => $feature['product_id'],
+                        'price' => $feature['price'],
+                        'description' => $feature['description'],
+                    ];
+                }
                 continue;
             }
             // if feature type is free
             if ($feature['code_type'] === 'free') {
-                $discountData [$feature['plan_id']][] = [
-                    'feature_status' => true,
-                    'type' => $feature['code_type'],
-                    'plan_id' => $feature['plan_id'],
-                    'description' => $feature['description'],
-                ];
+                if ($feature['plan_id']) {
+                    $discountData [$feature['plan_id']][] = [
+                        'feature_status' => true,
+                        'type' => $feature['code_type'],
+                        'plan_id' => $feature['plan_id'],
+                        'description' => $feature['description'],
+                    ];
+                }
+                if ($feature['product_id']) {
+                    $discountData [$feature['product_id']][] = [
+                        'feature_status' => true,
+                        'type' => $feature['code_type'],
+                        'product_id' => $feature['product_id'],
+                        'description' => $feature['description'],
+                    ];
+                }
                 continue;
             }
         }

@@ -38,7 +38,8 @@ class ValidatorHelper
                 'market.*.version_minor' => 'exclude_if:has_market,false|required|numeric|min:0|max:999',
                 'market.*.version_patch' => 'exclude_if:has_market,false|required|numeric|min:0|max:999',
                 'features' => 'required|array|min:1|max:50',
-                'features.*.plan_id' => 'required|numeric',
+                'features.*.plan_id' => 'required_without:features.*.product_id|numeric',
+                'features.*.product_id' => 'required_without:features.*.plan_id|numeric|exclude_unless:features.*.plan_id,null',
                 'features.*.start_time' => 'required|date|after_or_equal:'. Carbon::today()->subHour().'',
                 'features.*.end_time' => 'required|date|after:features.*.start_time',
                 'features.*.code_type' => 'required|in:percent,price,free',
@@ -65,6 +66,7 @@ class ValidatorHelper
                 'after' => __('messages.after'),
                 'uuid' => __('messages.uuid'),
                 'after_or_equal' => __('messages.after_or_equal'),
+                'required_without' => __('messages.required_without'),
             ]);
     }
 
@@ -74,7 +76,8 @@ class ValidatorHelper
             [
                 'group_id' => 'required|numeric|min:1|exists:discount_code_groups,id',
                 'features' => 'required|array|min:1|max:50',
-                'features.*.plan_id' => 'required|numeric',
+                'features.*.plan_id' => 'required_without:features.*.product_id|numeric',
+                'features.*.product_id' => 'required_without:features.*.plan_id|numeric|exclude_unless:features.*.plan_id,null',
                 'features.*.start_time' => 'required|date|after_or_equal:'. Carbon::today()->subHour().'',
                 'features.*.end_time' => 'required|date|after:features.*.start_time',
                 'features.*.code_type' => 'required|in:percent,price,free',
@@ -95,7 +98,8 @@ class ValidatorHelper
                 'date' => __('messages.date'),
                 'after' => __('messages.after'),
                 'after_or_equal' => __('messages.after_or_equal'),
-                'exists' => __('messages.exists')
+                'exists' => __('messages.exists'),
+                'required_without' => __('messages.required_without'),
             ]);
     }
 
@@ -178,7 +182,8 @@ class ValidatorHelper
             'market.*.version_minor' => 'exclude_if:has_market,false|required|numeric|min:0|max:999',
             'market.*.version_patch' => 'exclude_if:has_market,false|required|numeric|min:0|max:999',
             'features' => 'required|array|min:1|max:50',
-            'features.*.plan_id' => 'required|numeric',
+            'features.*.plan_id' => 'required_without:features.*.product_id|numeric',
+            'features.*.product_id' => 'required_without:features.*.plan_id|numeric|exclude_unless:features.*.plan_id,null',
             'features.*.start_time' => 'required|date|after_or_equal:'. Carbon::today()->subHour().'',
             'features.*.end_time' => 'required|date|after:features.*.start_time',
             'features.*.code_type' => 'required|in:percent,price,free',
@@ -203,6 +208,7 @@ class ValidatorHelper
                 'after' => __('messages.after'),
                 'uuid' => __('messages.uuid'),
                 'after_or_equal' => __('messages.after_or_equal'),
+                'required_without' => __('messages.required_without'),
             ]);
 
     }
@@ -223,11 +229,24 @@ class ValidatorHelper
 
                 $IntervalStart_timeStatus = (new SmallHelper)->checkDateInterval($features[$i]['start_time'], $value['start_time'], $value['end_time']);
                 $IntervalEnd_timeStatus = (new SmallHelper)->checkDateInterval($features[$i]['end_time'], $value['start_time'], $value['end_time']);
-                if (($features[$i]['plan_id'] === $value['plan_id']) && $IntervalStart_timeStatus) {
-                    return false;
+
+                if (array_key_exists("product_id", $features[$i]) && array_key_exists("product_id", $value) ) {
+
+                    if (($features[$i]['product_id'] === $value['product_id']) && $IntervalStart_timeStatus) {
+                        return false;
+                    }
+                    if (($features[$i]['product_id'] === $value['product_id']) && $IntervalEnd_timeStatus) {
+                        return false;
+                    }
                 }
-                if (($features[$i]['plan_id'] === $value['plan_id']) && $IntervalEnd_timeStatus) {
-                    return false;
+
+                if (array_key_exists("plan_id", $features[$i]) && array_key_exists("plan_id", $value) ) {
+                    if (($features[$i]['plan_id'] === $value['plan_id']) && $IntervalStart_timeStatus) {
+                        return false;
+                    }
+                    if (($features[$i]['plan_id'] === $value['plan_id']) && $IntervalEnd_timeStatus) {
+                        return false;
+                    }
                 }
 
             }

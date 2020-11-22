@@ -18,7 +18,8 @@ class CreateDiscountCodeFeaturesTable extends Migration
         Schema::create('discount_code_features', function (Blueprint $table) {
             $table->id();
             $table->foreignId('group_id')->constrained('discount_code_groups')->onDelete('cascade');
-            $table->unsignedBigInteger('plan_id')->comment('plan id on sales system');
+            $table->unsignedBigInteger('plan_id')->nullable();
+            $table->unsignedBigInteger('product_id')->nullable();
             $table->timestamp('start_time')->comment('Code start time validation.');
             $table->timestamp('end_time')->default(now())->comment('Code end time validation.');
             $table->string('code_type', 10)->comment('has three parameters : free & percent & price');
