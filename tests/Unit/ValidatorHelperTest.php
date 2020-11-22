@@ -305,6 +305,96 @@ class ValidatorHelperTest extends TestCase
         ];
         $result = (new ValidatorHelper)->validateFeatureArray($features);
         self::assertTrue($result);
+
+        // plan id same and time has Common interval in start_time
+        $features = [
+            [
+                'product_id' => 1212,
+                'start_time' => date('Y-m-d H:i:s', strtotime(Carbon::today()->addDays(1))),
+                'end_time' => date('Y-m-d H:i:s', strtotime(Carbon::today()->addDays(5))),
+            ],
+            [
+                'product_id' => 1212,
+                'start_time' => date('Y-m-d H:i:s', strtotime(Carbon::today()->subDays(6))),
+                'end_time' => date('Y-m-d H:i:s', strtotime(Carbon::today()->addDays(8))),
+            ],
+            [
+                'product_id' => 1212,
+                'start_time' => date('Y-m-d H:i:s', strtotime(Carbon::today()->addDays(4))),
+                'end_time' => date('Y-m-d H:i:s', strtotime(Carbon::today()->addDays(10))),
+            ]
+
+        ];
+        $result = (new ValidatorHelper)->validateFeatureArray($features);
+        self::assertFalse($result);
+
+        // plan id same and time has Common interval in end_time
+        $features = [
+            [
+                'product_id' => 1212,
+                'start_time' => date('Y-m-d H:i:s', strtotime(Carbon::today()->addDays(1))),
+                'end_time' => date('Y-m-d H:i:s', strtotime(Carbon::today()->addDays(5))),
+            ],
+            [
+                'product_id' => 1212,
+                'start_time' => date('Y-m-d H:i:s', strtotime(Carbon::today()->addDays(3))),
+                'end_time' => date('Y-m-d H:i:s', strtotime(Carbon::today()->addDays(8))),
+            ],
+            [
+                'product_id' => 1212,
+                'start_time' => date('Y-m-d H:i:s', strtotime(Carbon::today()->addDays(9))),
+                'end_time' => date('Y-m-d H:i:s', strtotime(Carbon::today()->addDays(10))),
+            ]
+
+        ];
+        $result = (new ValidatorHelper)->validateFeatureArray($features);
+        self::assertFalse($result);
+
+
+        // plan id different but time has Common interval
+        $features = [
+            [
+                'product_id' => 1212,
+                'start_time' => date('Y-m-d H:i:s', strtotime(Carbon::today()->addDays(1))),
+                'end_time' => date('Y-m-d H:i:s', strtotime(Carbon::today()->addDays(5))),
+            ],
+            [
+                'product_id' => 1213,
+                'start_time' => date('Y-m-d H:i:s', strtotime(Carbon::today()->addDays(3))),
+                'end_time' => date('Y-m-d H:i:s', strtotime(Carbon::today()->addDays(8))),
+            ],
+            [
+                'product_id' => 1214,
+                'start_time' => date('Y-m-d H:i:s', strtotime(Carbon::today()->addDays(7))),
+                'end_time' => date('Y-m-d H:i:s', strtotime(Carbon::today()->addDays(10))),
+            ]
+
+        ];
+        $result = (new ValidatorHelper)->validateFeatureArray($features);
+        self::assertTrue($result);
+
+        // features are valid
+        $features = [
+            [
+                'product_id' => 1212,
+                'start_time' => date('Y-m-d H:i:s', strtotime(Carbon::today()->addDays(1))),
+                'end_time' => date('Y-m-d H:i:s', strtotime(Carbon::today()->addDays(3))),
+            ],
+            [
+                'product_id' => 1213,
+                'start_time' => date('Y-m-d H:i:s', strtotime(Carbon::today()->addDays(5))),
+                'end_time' => date('Y-m-d H:i:s', strtotime(Carbon::today()->addDays(7))),
+            ],
+            [
+                'product_id' => 1214,
+                'start_time' => date('Y-m-d H:i:s', strtotime(Carbon::today()->addDays(8))),
+                'end_time' => date('Y-m-d H:i:s', strtotime(Carbon::today()->addDays(10))),
+            ]
+
+        ];
+        $result = (new ValidatorHelper)->validateFeatureArray($features);
+        self::assertTrue($result);
+
     }
 
     public function testCodeProcessingValidator(): void

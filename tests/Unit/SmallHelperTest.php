@@ -331,7 +331,7 @@ class SmallHelperTest extends TestCase
 
         $requestParams = (new DiscountCodeFeatures())->getParams();
         self::assertIsArray( $requestParams);
-        self::assertEquals(["id","group_id","plan_id","start_time","end_time","code_type","percent","limit_percent_price","price","description","created_at","updated_at",], $requestParams);
+        self::assertEquals(["id","group_id","plan_id","product_id","start_time","end_time","code_type","percent","limit_percent_price","price","description","created_at","updated_at",], $requestParams);
 
         $query = DiscountCodeFeatures::query();
         $data = SmallHelper::fetchList($requestParams, $query, $request, $page, $limit, $orderColumn, $orderBy);
