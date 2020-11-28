@@ -219,7 +219,7 @@ class ValidatorHelper
      */
     public function validateFeatureArray(array $features): bool
     {
-        $count = count($features) - 1;
+        $count = count($features) ;
         $checkinArray = $features;
         for ($i = 0; $i < $count; $i++) {
             foreach ($checkinArray as $key => $value) {
@@ -229,7 +229,6 @@ class ValidatorHelper
 
                 $IntervalStart_timeStatus = (new SmallHelper)->checkDateInterval($features[$i]['start_time'], $value['start_time'], $value['end_time']);
                 $IntervalEnd_timeStatus = (new SmallHelper)->checkDateInterval($features[$i]['end_time'], $value['start_time'], $value['end_time']);
-
                 if (array_key_exists("product_id", $features[$i]) && array_key_exists("product_id", $value) ) {
 
                     if (($features[$i]['product_id'] === $value['product_id']) && $IntervalStart_timeStatus) {
