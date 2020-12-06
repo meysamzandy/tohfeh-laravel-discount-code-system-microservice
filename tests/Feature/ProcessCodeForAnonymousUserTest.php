@@ -72,7 +72,7 @@ class ProcessCodeForAnonymousUserTest extends TestCase
         $tokenData = [
             'uuid' => '2d3c9de4-3831-4988-8afb-710fda2e740c',
         ];
-        $jwt = JwtHelper::encodeJwt(config('settings.user_management_jwt.key'), $tokenData, 36000);
+        $jwt = JwtHelper::encodeJwt('HS512',config('settings.user_management_jwt.key'), $tokenData, 36000);
         $data = [
             'user_token' => $jwt,
             'market' => [
@@ -97,7 +97,7 @@ class ProcessCodeForAnonymousUserTest extends TestCase
         $tokenData = [
             'uuid' => '2d3c9de4-3831-4988-8afb-710fda2e740c',
         ];
-        $jwt = JwtHelper::encodeJwt(config('settings.user_management_jwt.key'), $tokenData, 36000);
+        $jwt = JwtHelper::encodeJwt('HS512',config('settings.user_management_jwt.key'), $tokenData, 36000);
         $data = [
             'user_token' => $jwt,
             'market' => [
@@ -159,7 +159,7 @@ class ProcessCodeForAnonymousUserTest extends TestCase
         $tokenData = [
             'uuid' => '2d3c9de4-3831-4988-8afb-710fda2e740c',
         ];
-        $jwt = JwtHelper::encodeJwt(config('settings.user_management_jwt.key'), $tokenData, 36000);
+        $jwt = JwtHelper::encodeJwt('HS512',config('settings.user_management_jwt.key'), $tokenData, 36000);
         $data = [
             'user_token' => $jwt,
             'market' => [
@@ -184,7 +184,7 @@ class ProcessCodeForAnonymousUserTest extends TestCase
         $tokenData = [
             'uuid' => '2d3c9de4-3831-4988-8afb-710fda2e740c',
         ];
-        $jwt = JwtHelper::encodeJwt(config('settings.user_management_jwt.key'), $tokenData, 36000);
+        $jwt = JwtHelper::encodeJwt('HS512',config('settings.user_management_jwt.key'), $tokenData, 36000);
         $data = [
             'user_token' => $jwt,
             'market' => [

@@ -20,11 +20,11 @@ class AdminToken
 //        $data = [
 //            'password' => config('settings.admin_jwt.password')
 //        ];
-//        $jwt = JwtHelper::encodeJwt(config('settings.admin_jwt.key'),$data, 360000) ;
+//        $jwt = JwtHelper::encodeJwt('HS512',config('settings.admin_jwt.key'),$data, 360000) ;
 //        dd($jwt);
         $password = config('settings.admin_jwt.password');
 
-        $token = JwtHelper::decodeJwt(config('settings.admin_jwt.key'), $request->header('token'));
+        $token = JwtHelper::decodeJwt('HS512',config('settings.admin_jwt.key'), $request->header('token'));
         if (!$request->header('token')) {
             return response()->json([__('messages.tokenIsNotValid')])->setStatusCode(403);
         }

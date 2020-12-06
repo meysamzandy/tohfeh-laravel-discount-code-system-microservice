@@ -22,7 +22,7 @@ class CodeCallBack extends Controller
 //            'code' => 'meysamndys',
 //            'usage_result' => true,
 //        ];
-//        $jwt = JwtHelper::encodeJwt(config('settings.client_jwt.key'), $data, 36000) ;
+//        $jwt = JwtHelper::encodeJwt('HS512',config('settings.client_jwt.key'), $data, 36000) ;
 //        dd($jwt);
 
         // check if data:token doesn't exist
@@ -31,7 +31,7 @@ class CodeCallBack extends Controller
         }
 
         // decode token in data
-        $tokenData = JwtHelper::decodeJwt(config('settings.client_jwt.key'), $request->input('data'));
+        $tokenData = JwtHelper::decodeJwt('HS512',config('settings.client_jwt.key'), $request->input('data'));
 
         // check if token is valid
         if (!$tokenData['result_status']) {

@@ -556,7 +556,7 @@ class DiscountCodeControllerTest extends TestCase
         $data = [
             'password' => config('settings.admin_jwt.password')
         ];
-        $jwt = JwtHelper::encodeJwt(config('settings.admin_jwt.key'), $data, 360000);
+        $jwt = JwtHelper::encodeJwt('HS512',config('settings.admin_jwt.key'), $data, 360000);
         $response = $this->delete($url, [], ['token' => $jwt]);
         $response->assertStatus(404);
 
@@ -566,7 +566,7 @@ class DiscountCodeControllerTest extends TestCase
         $data = [
             'password' => config('settings.admin_jwt.password')
         ];
-        $jwt = JwtHelper::encodeJwt(config('settings.admin_jwt.key'), $data, 360000);
+        $jwt = JwtHelper::encodeJwt('HS512',config('settings.admin_jwt.key'), $data, 360000);
         $response = $this->delete($url, [], ['token' => $jwt]);
         self::assertEquals(1, $getCodes[0]['id']);
         $this->assertDatabaseMissing('discount_codes', [

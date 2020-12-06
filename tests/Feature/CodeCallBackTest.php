@@ -69,7 +69,7 @@ class CodeCallBackTest extends TestCase
             'code' => $codeBeforeCallback['code'],
             'usage_result' => false
         ];
-        $jwt = JwtHelper::encodeJwt(config('settings.client_jwt.key'), $tokenData, 36000);
+        $jwt = JwtHelper::encodeJwt('HS512',config('settings.client_jwt.key'), $tokenData, 36000);
         $url = self::CALLBACK_URL;
         $data = [
             'data' => $jwt
@@ -97,7 +97,7 @@ class CodeCallBackTest extends TestCase
             'code' => $codeBeforeCallback['code'],
             'usage_result' => true
         ];
-        $jwt = JwtHelper::encodeJwt(config('settings.client_jwt.key'), $tokenData, 36000);
+        $jwt = JwtHelper::encodeJwt('HS512',config('settings.client_jwt.key'), $tokenData, 36000);
         $url = self::CALLBACK_URL;
         $data = [
             'data' => $jwt
@@ -124,7 +124,7 @@ class CodeCallBackTest extends TestCase
             'cosde' => $codeBeforeCallback['code'],
             'usagse_result' => true
         ];
-        $jwt = JwtHelper::encodeJwt(config('settings.client_jwt.key'), $tokenData, 36000);
+        $jwt = JwtHelper::encodeJwt('HS512',config('settings.client_jwt.key'), $tokenData, 36000);
         $url = self::CALLBACK_URL;
         $data = [
             'data' => $jwt

@@ -83,7 +83,7 @@ class DiscountCodeGroupControllerTest extends TestCase
         $data = [
             'password' => config('settings.admin_jwt.password')
         ];
-        $jwt = JwtHelper::encodeJwt(config('settings.admin_jwt.key'), $data, 360000);
+        $jwt = JwtHelper::encodeJwt('HS512',config('settings.admin_jwt.key'), $data, 360000);
         $response = $this->delete($url, [], ['token' => $jwt]);
         $response->assertStatus(204);
         $this->assertDatabaseMissing('discount_code_groups', [

@@ -41,7 +41,7 @@ class ProcessCodeForAuthenticatedUser extends Controller
 //              "st" =>  0,
 //              "suid" =>  "ae83ee31-70fb-40d7-9c0b-766199ce832d"
 //        ];
-//        $jwt = JwtHelper::encodeJwt(config('settings.user_management_jwt.key'), $data, 36000);
+//        $jwt = JwtHelper::encodeJwt('HS256',config('settings.user_management_jwt.key'), $data, 36000);
 //        dd($jwt);
 
 
@@ -56,11 +56,12 @@ class ProcessCodeForAuthenticatedUser extends Controller
             return response()->json([self::BODY => null, self::MESSAGE => $validator->errors()])->setStatusCode(400);
         }
 
-        $tokenData = JwtHelper::decodeJwt(config('settings.user_management_jwt.key'), $request->bearerToken());
+        $tokenData = JwtHelper::decodeJwt('HS256',config('settings.user_management_jwt.key'), $request->bearerToken());
         // check if token is invalid
         if (!$tokenData['result_status']) {
             return response()->json([self::BODY => null, self::MESSAGE => $tokenData['result']])->setStatusCode(403);
         }
+
         $uuid = $tokenData['result']['body']['auid'] ?? null;
 
 
@@ -98,7 +99,7 @@ class ProcessCodeForAuthenticatedUser extends Controller
             'first_by' => (boolean)$discountCode['first_buy'],
             'features' => $preparedFeatures,
         ];
-        $result['token'] = JwtHelper::encodeJwt(config('settings.client_jwt.key'), $result, config('settings.client_jwt.expiration'));
+        $result['token'] = JwtHelper::encodeJwt('HS512',config('settings.client_jwt.key'), $result, config('settings.client_jwt.expiration'));
         return response()->json([self::BODY => $result, self::MESSAGE => null])->setStatusCode(200);
 
     }

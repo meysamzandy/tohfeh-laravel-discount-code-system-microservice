@@ -21,35 +21,37 @@ class JwtHelper
     public const BODY = 'body';
 
     /**
+     * @param $alg
      * @param $key
      * @param $data
      * @param int $expireTime
      *
      * @return string
      */
-    public static function encodeJwt($key,$data, int $expireTime): string {
-        $header = ['alg' => JWT::ALGORITHM_HS512];
+    public static function encodeJwt($alg,$key,$data, int $expireTime): string {
+        $header = ['alg' => $alg];
         $payload = [
             self::BODY => $data,
             'exp' => time() + (1 * 1 * $expireTime * 60),
         ];
         $tokenDecoded = new TokenDecoded($header, $payload);
-        $tokenEncoded = $tokenDecoded->encode($key,JWT::ALGORITHM_HS512);
+        $tokenEncoded = $tokenDecoded->encode($key,$alg);
         return $tokenEncoded->__toString();
     }
 
 
     /**
+     * @param $alg
      * @param $key
      * @param null $tokenString
      *
      * @return array|string
      */
-    public static function decodeJwt($key ,$tokenString = NULL) {
+    public static function decodeJwt($alg,$key ,$tokenString = NULL) {
         try {
             $tokenEncoded = new TokenEncoded($tokenString);
             try {
-                $tokenEncoded->validate($key,JWT::ALGORITHM_HS512);
+                $tokenEncoded->validate($key,$alg);
                 $outPut = [
                     self::RESULT_STATUS => true,
                     self::RESULT => $tokenEncoded->decode()->getPayload(),

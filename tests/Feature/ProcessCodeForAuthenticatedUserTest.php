@@ -71,9 +71,9 @@ class ProcessCodeForAuthenticatedUserTest extends TestCase
         // process manual public with has market false code
         $url = self::PROCESS_CODE_URL . 'CODE_TEST_50';
         $tokenData = [
-            'uuid' => '2d3c9de4-3831-4988-8afb-710fda2e740c',
+            'auid' => '2d3c9de4-3831-4988-8afb-710fda2e740c',
         ];
-        $jwt = JwtHelper::encodeJwt(config('settings.user_management_jwt.key'), $tokenData, 36000);
+        $jwt = JwtHelper::encodeJwt('HS256',config('settings.user_management_jwt.key'), $tokenData, 36000);
         $data = [
             'market' => [
                 "name" => "caffebazar",
@@ -98,9 +98,9 @@ class ProcessCodeForAuthenticatedUserTest extends TestCase
         // process manual public with has market false code
         $url = self::PROCESS_CODE_URL . 'CODE_TEST_50';
         $tokenData = [
-            'uuid' => '2d3c9de4-3831-4988-8afb-710fda2e740c',
+            'auid' => '2d3c9de4-3831-4988-8afb-710fda2e740c',
         ];
-        $jwt = JwtHelper::encodeJwt(config('settings.user_management_jwt.key'), $tokenData, 36000);
+        $jwt = JwtHelper::encodeJwt('HS256',config('settings.user_management_jwt.key'), $tokenData, 36000);
         $data = [
             'market' => [
                 "name" => "caffebazar",
@@ -162,9 +162,9 @@ class ProcessCodeForAuthenticatedUserTest extends TestCase
         // process manual public with has market false code
         $url = self::PROCESS_CODE_URL . 'CODE_TEST_51';
         $tokenData = [
-            'uuid' => '2d3c9de4-3831-4988-8afb-710fda2e740c',
+            'auid' => '2d3c9de4-3831-4988-8afb-710fda2e740c',
         ];
-        $jwt = JwtHelper::encodeJwt(config('settings.user_management_jwt.key'), $tokenData, 36000);
+        $jwt = JwtHelper::encodeJwt('HS256',config('settings.user_management_jwt.key'), $tokenData, 36000);
         $data = [
             'market' => [
                 "name" => "caffebazar",
@@ -222,9 +222,9 @@ class ProcessCodeForAuthenticatedUserTest extends TestCase
         // process manual public with has market false code
         $url = self::PROCESS_CODE_URL . 'CODE_TEST_52';
         $tokenData = [
-            'uuid' => '2d3c9de4-3831-4988-8afb-710fda5e640c',
+            'auid' => '2d3c9de4-3831-4988-8afb-710fda5e640c',
         ];
-        $jwt = JwtHelper::encodeJwt(config('settings.user_management_jwt.key'), $tokenData, 36000);
+        $jwt = JwtHelper::encodeJwt('HS256',config('settings.user_management_jwt.key'), $tokenData, 36000);
         $data = [
             'market' => [
                 "name" => "caffebazar",
@@ -247,9 +247,9 @@ class ProcessCodeForAuthenticatedUserTest extends TestCase
         // process manual public with has market false code
         $url = self::PROCESS_CODE_URL . 'CODE_TEST_52';
         $tokenData = [
-            'uuid' => '2d3c9de4-3831-4988-8afb-710fda2e740c',
+            'auid' => '2d3c9de4-3831-4988-8afb-710fda2e740c',
         ];
-        $jwt = JwtHelper::encodeJwt(config('settings.user_management_jwt.key'), $tokenData, 36000);
+        $jwt = JwtHelper::encodeJwt('HS512',config('settings.user_management_jwt.key'), $tokenData, 36000);
         $data = [
             'market' => [
                 "name" => "caffebazar",
@@ -335,9 +335,9 @@ class ProcessCodeForAuthenticatedUserTest extends TestCase
         // process manual public with has market false code
         $url = self::PROCESS_CODE_URL . 'CODE_TEST_53';
         $data = [
-            'uuid' => '2d3c9de4-3831-4988-8afb-710fda2e740c',
+            'auid' => '2d3c9de4-3831-4988-8afb-710fda2e740c',
         ];
-        $jwt = JwtHelper::encodeJwt(config('settings.user_management_jwt.key'), $data, 36000);
+        $jwt = JwtHelper::encodeJwt('HS256',config('settings.user_management_jwt.key'), $data, 36000);
 
         $data1 = [
             'market' => [
@@ -352,7 +352,7 @@ class ProcessCodeForAuthenticatedUserTest extends TestCase
         $responseData = json_decode($response->getContent(), true);
         self::assertEquals(403, $response->status());
         self::assertEquals('سقف مجاز استفاده از این کد برای شما به پایان رسیده است.', $responseData['message']);
-        
+
         $data1 = [
             'market' => [
                 "name" => "caffebazar",
