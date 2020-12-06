@@ -22,7 +22,24 @@ class ProcessCodeForAuthenticatedUser extends Controller
     public function code(Request $request, DiscountCode $discountCode)
     {
 //        $data = [
-//            'uuid' => '2d3c9de4-3831-4988-8afb-710fda3e740c',
+//              "auid" =>  "3f577010-a879-4291-9968-b5c9f1622846",
+//              "bool" =>  "100000",
+//              "code" =>  "98",
+//              "cp" =>  null,
+//              "dc" =>  null,
+//              "dl1" =>  0,
+//              "dl2" =>  0,
+//              "exp" =>  1606284992,
+//              "jti" =>  "2ffc88df-e467-4326-a656-07a62b55e896",
+//              "ls" =>  "1",
+//              "name" =>  "کاربر فیلمگردی",
+//              "phone" =>  "9034216449",
+//              "rct" =>  null,
+//              "rn" =>  null,
+//              "sb" =>  0,
+//              "sp" =>  null,
+//              "st" =>  0,
+//              "suid" =>  "ae83ee31-70fb-40d7-9c0b-766199ce832d"
 //        ];
 //        $jwt = JwtHelper::encodeJwt(config('settings.user_management_jwt.key'), $data, 36000);
 //        dd($jwt);
@@ -44,8 +61,7 @@ class ProcessCodeForAuthenticatedUser extends Controller
         if (!$tokenData['result_status']) {
             return response()->json([self::BODY => null, self::MESSAGE => $tokenData['result']])->setStatusCode(403);
         }
-        
-        $uuid = $tokenData['result']['body']['uuid'] ?? null;
+        $uuid = $tokenData['result']['body']['auid'] ?? null;
 
 
 
