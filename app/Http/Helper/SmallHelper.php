@@ -5,6 +5,7 @@ namespace App\Http\Helper;
 
 use Exception;
 use Illuminate\Http\Request;
+use Nowakowskir\JWT\Base64Url;
 
 class SmallHelper
 {
@@ -220,5 +221,12 @@ class SmallHelper
             self::MESSAGE => null,
         ];
 
+    }
+
+    public static function getPayloadFromJwt($token)
+    {
+        $token = str_replace('Bearer ', '', $token);
+        list($header, $payload, $signature) = explode('.', $token);
+        return json_decode(Base64Url::decode($payload), true);
     }
 }

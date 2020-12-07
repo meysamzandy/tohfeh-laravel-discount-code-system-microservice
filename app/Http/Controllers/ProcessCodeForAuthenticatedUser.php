@@ -11,6 +11,7 @@ use App\Models\DiscountCodeGroups;
 use Hekmatinasser\Verta\Verta;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use Nowakowskir\JWT\Base64Url;
 
 class ProcessCodeForAuthenticatedUser extends Controller
 {
@@ -56,15 +57,18 @@ class ProcessCodeForAuthenticatedUser extends Controller
             return response()->json([self::BODY => null, self::MESSAGE => $validator->errors()])->setStatusCode(400);
         }
 
-        $tokenData = JwtHelper::decodeJwt('HS256',config('settings.user_management_jwt.key'), $request->bearerToken());
+        $tokenData = SmallHelper::getPayloadFromJwt($request->bearerToken());
         // check if token is invalid
-        if (!$tokenData['result_status']) {
+        if (!$tokenData) {
             return response()->json([self::BODY => null, self::MESSAGE => $tokenData['result']])->setStatusCode(403);
         }
-
-        $uuid = $tokenData['result']['body']['auid'] ?? null;
-
-
+        $uuid = null ;
+        if (isset($tokenData['auid'])) {
+            $uuid = $tokenData['auid'];
+        }
+        if (isset($tokenData['body']['auid'])) {
+            $uuid = $tokenData['body']['auid'];
+        }
 
         // check if code is unavailable
         if ($discountCode['cancel_date']) {
