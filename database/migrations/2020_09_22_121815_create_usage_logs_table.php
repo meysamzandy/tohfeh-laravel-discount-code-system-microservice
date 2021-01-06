@@ -19,6 +19,8 @@ class CreateUsageLogsTable extends Migration
             $table->id();
             $table->foreignId('code_id')->constrained('discount_codes')->onDelete('cascade');
             $table->string('code',40)->index()->comment('discount codes are here');
+            $table->string('source',40)->comment('discount codes are here');
+            $table->string('offset',40)->nullable()->comment('discount codes are here');
             $table->uuid('uuid')->comment('user uuid in user management system');
             $table->timestamps();
         });

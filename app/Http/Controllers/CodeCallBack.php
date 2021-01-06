@@ -21,6 +21,8 @@ class CodeCallBack extends Controller
 //            'uuid' => '2d3c9de4-3831-4988-8afb-710fda2e740c',
 //            'code' => 'meysamndys',
 //            'usage_result' => true,
+//            'source' => api,
+//            'offset' => 12,
 //        ];
 //        $jwt = JwtHelper::encodeJwt('HS512',config('settings.client_jwt.key'), $data, 36000) ;
 //        dd($jwt);
@@ -60,7 +62,13 @@ class CodeCallBack extends Controller
         }
 
         // store usage log
-        $usageLog = new UsageLog(['code_id'=>$codeData['id'],'code'=> $codeData['code'] , 'uuid' =>$data['uuid'] ]);
+        $usageLog = new UsageLog([
+            'code_id'=>$codeData['id'],
+            'code'=> $codeData['code'] ,
+            'uuid' =>$data['uuid'],
+            'source' =>$data['source'],
+            'offset' => isset($data['offset']) ? $data['offset'] :null
+            ]);
         $usageSaveResult = $usageLog->save();
 
         // check if store usage log successfully

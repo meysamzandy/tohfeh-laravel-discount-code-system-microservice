@@ -114,6 +114,8 @@ class ValidatorHelper
                 'uuid' => 'required|uuid',
                 'code' => 'required|min:6|max:12|exists:discount_codes,code',
                 'usage_result' => 'required|boolean',
+                'source' => 'required|string|in:api,kafka',
+                'offset' => 'nullable',
             ]
             , [
                 'required' => __('messages.required'),

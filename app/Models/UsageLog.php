@@ -12,7 +12,7 @@ class UsageLog extends Model
     use HasFactory;
 
     protected $fillable = [
-        'code_id','code','uuid'
+        'code_id','code','uuid','source','offset'
     ];
 
 
