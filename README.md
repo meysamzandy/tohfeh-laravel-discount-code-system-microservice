@@ -22,7 +22,7 @@ redirect_stderr=true
 stdout_logfile=/var/www/tohfeh/storage/logs/worker.log`
 
 ### Requirements Command
-run `git clone http://git.novincinema.com/ayeneh/tohfeh.git` <br>
+run `git clone https://github.com/meysamzandy/tohfeh-laravel-discount-code-system-microservice.git` <br>
 run `cd /var/www/tohfeh` <br>
 run `composer install` <br>
 Duplicate .env.example to .env <br>
