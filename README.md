@@ -1,4 +1,4 @@
-## Sekkeh Installation Tips
+## Tohfeh Installation Tips
 tohfeh is a discount code microservice for filmgardi.com
 
 ### Requirements installation
@@ -6,7 +6,6 @@ tohfeh is a discount code microservice for filmgardi.com
 Install web server (nginx) <br>
 Install php > 7.4  last stable version<br>
 Install mariadb last stable version<br>
-Install phpmyadmin -last stable version<br>
 Install the composer v2<br>
 Enable the event on mariadb<br>
 
